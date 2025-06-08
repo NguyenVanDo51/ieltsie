@@ -2,6 +2,7 @@
   "expo": {
     "name": "ieltsie",
     "slug": "ieltsie",
+    "scheme": "company.ieltsie",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,17 +14,30 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.nguyenvando51.ieltsie"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.nguyenvando51.ieltsie"
     },
     "web": {
+      "bundler": "metro",
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4c40f6d3-2251-4c5e-beaa-4d39eb0b542c"
+      }
+    },
+    "owner": "nguyenvando51",
+    "plugins": [
+      "expo-router",
+      "expo-audio"
+    ]
   }
 }
