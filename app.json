@@ -26,7 +26,6 @@
       "package": "com.nguyenvando51.ieltsie"
     },
     "web": {
-      "output": "server",
       "bundler": "metro",
       "favicon": "./assets/favicon.png"
     },
@@ -36,9 +35,6 @@
       }
     },
     "owner": "nguyenvando51",
-    "plugins": [
-      "expo-router",
-      "expo-audio"
-    ]
+    "plugins": ["expo-router", "expo-audio"]
   }
 }

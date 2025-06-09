@@ -11,6 +11,7 @@ import { PortalHost } from '@rn-primitives/portal'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated'
+import { PopoverProvider } from '~/components/ui/popover'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -55,15 +56,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
+    <PopoverProvider>
+      <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
+        <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
 
-      <View style={{ flex: 1, marginTop: insets.top }}>
-        <Stack screenOptions={{ headerShown: false }} />
-      </View>
+        <View style={{ flex: 1, marginTop: insets.top }}>
+          <Stack screenOptions={{ headerShown: false }} />
+        </View>
 
-      <PortalHost />
-    </ThemeProvider>
+        <PortalHost />
+      </ThemeProvider>
+    </PopoverProvider>
   )
 }
 

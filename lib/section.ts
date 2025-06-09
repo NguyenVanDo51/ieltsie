@@ -1,6 +1,7 @@
 import { LessonProps } from '~/components/map/Lesson'
 import { ITopic } from '~/types/word'
 import { IScore } from './storage'
+import { IT_VOCAB_LESSONS } from '~/data/vocab'
 
 const StartImg = require('~/assets/lesson/start.gif')
 const NewLessonImg = require('~/assets/lesson/new.gif')
@@ -20,9 +21,11 @@ const marginLefts = [
   -1 * marginLeft + step,
 ]
 
-export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonId: string) => {
+const transformDataSection = (data: ITopic[]) => {
   const sectionTemp = data.map((topic) => {
-    const lessonParts: (LessonProps & { id: string })[] = []
+    const lessonParts: (Omit<LessonProps, 'onStart' | 'lastLessonId' | 'scores'> & {
+      id: string
+    })[] = []
 
     lessonParts.push({
       id: `${topic.lessons[0].id}-start`,
@@ -32,9 +35,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: StartImg,
       popoverContent: 'Bắt đầu bài học',
       popoverDescription: 'Học từ mới và làm bài tập',
-      scores: scores,
-      totalWord: topic.lessons[0].words.length,
-      lastLessonId: lastLessonId,
     })
 
     lessonParts.push({
@@ -45,9 +45,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: NewLessonImg,
       popoverContent: 'Học thêm từ mới',
       popoverDescription: 'Tiếp tục học từ mới trong bài học này',
-      scores: scores,
-      totalWord: topic.lessons[1].words.length,
-      lastLessonId: lastLessonId,
     })
 
     lessonParts.push({
@@ -59,9 +56,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: PracticeImg,
       popoverContent: 'Luyện tập từ đã học',
       popoverDescription: 'Luyện tập từ mới đã học trong bài học này',
-      scores: scores,
-      totalWord: topic.lessons[1].words.length,
-      lastLessonId: lastLessonId,
     })
     lessonParts.push({
       id: `${topic.lessons[2].id}-new`,
@@ -71,9 +65,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: NewLessonImg,
       popoverContent: 'Học từ mới tiếp theo',
       popoverDescription: 'Tiếp tục học từ mới trong bài học này',
-      scores: scores,
-      totalWord: topic.lessons[2].words.length,
-      lastLessonId: lastLessonId,
     })
 
     lessonParts.push({
@@ -85,9 +76,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: PracticeImg,
       popoverContent: 'Luyện tập từ đã học',
       popoverDescription: 'Luyện tập từ mới đã học trong bài học này',
-      scores: scores,
-      totalWord: topic.lessons[2].words.length,
-      lastLessonId: lastLessonId,
     })
     lessonParts.push({
       id: `${topic.lessons[3].id}-new`,
@@ -97,9 +85,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: NewLessonImg,
       popoverContent: 'Học thêm từ mới',
       popoverDescription: 'Tiếp tục học từ mới trong bài học này',
-      scores: scores,
-      totalWord: topic.lessons[3].words.length,
-      lastLessonId: lastLessonId,
     })
     lessonParts.push({
       id: `${topic.lessons[3].id}-practice`,
@@ -110,9 +95,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: PracticeImg,
       popoverContent: 'Luyện tập từ đã học',
       popoverDescription: 'Luyện tập từ mới đã học trong bài học này',
-      scores: scores,
-      totalWord: topic.lessons[3].words.length,
-      lastLessonId: lastLessonId,
     })
     lessonParts.push({
       id: `${topic.lessons[3].id}-final`,
@@ -123,9 +105,6 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
       icon: FinalImg,
       popoverContent: 'Ôn tập tất cả từ mới',
       popoverDescription: 'Ôn tập tất cả từ mới đã học trong chủ đề này',
-      scores: scores,
-      totalWord: topic.lessons[3].words.length,
-      lastLessonId: lastLessonId,
     })
 
     return {
@@ -136,3 +115,8 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
 
   return sectionTemp
 }
+
+export const DATA_FLAT_LIST = transformDataSection(IT_VOCAB_LESSONS)
+
+export const DATA_ALL_LESSON = DATA_FLAT_LIST.map((item) => item.data).flat()
+console.log(DATA_ALL_LESSON[0])

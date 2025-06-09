@@ -1,42 +1,98 @@
-import * as PopoverPrimitive from '@rn-primitives/popover';
-import { Platform, StyleSheet } from 'react-native';
-import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
-import { cn } from '~/lib/utils';
-import { TextClassContext } from '~/components/ui/text';
+import React, { createContext, useContext, useRef, useState } from 'react'
+import {
+  Modal,
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableWithoutFeedback,
+  LayoutRectangle,
+} from 'react-native'
 
-const Popover = PopoverPrimitive.Root;
-
-const PopoverTrigger = PopoverPrimitive.Trigger;
-
-function PopoverContent({
-  className,
-  align = 'center',
-  sideOffset = 4,
-  portalHost,
-  ...props
-}: PopoverPrimitive.ContentProps & {
-  ref?: React.RefObject<PopoverPrimitive.ContentRef>;
-  portalHost?: string;
-}) {
-  return (
-    <PopoverPrimitive.Portal hostName={portalHost}>
-      <PopoverPrimitive.Overlay style={Platform.OS !== 'web' ? StyleSheet.absoluteFill : undefined}>
-        <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut}>
-          <TextClassContext.Provider value='text-popover-foreground'>
-            <PopoverPrimitive.Content
-              align={align}
-              sideOffset={sideOffset}
-              className={cn(
-                'z-50 w-72 rounded-md web:cursor-auto border border-border bg-popover p-4 shadow-md shadow-foreground/5 web:outline-none web:data-[side=bottom]:slide-in-from-top-2 web:data-[side=left]:slide-in-from-right-2 web:data-[side=right]:slide-in-from-left-2 web:data-[side=top]:slide-in-from-bottom-2 web:animate-in web:zoom-in-95 web:fade-in-0',
-                className
-              )}
-              {...props}
-            />
-          </TextClassContext.Provider>
-        </Animated.View>
-      </PopoverPrimitive.Overlay>
-    </PopoverPrimitive.Portal>
-  );
+type PopoverState = {
+  visible: boolean
+  content: React.ReactNode
+  position: { top?: number; left?: number; right?: number; bottom?: number }
 }
 
-export { Popover, PopoverContent, PopoverTrigger };
+type PopoverContextType = {
+  openPopover: (options: { content: React.ReactNode; anchorRef: React.RefObject<View> }) => void
+  closePopover: () => void
+}
+
+const PopoverContext = createContext<PopoverContextType | null>(null)
+
+export function usePopover() {
+  const ctx = useContext(PopoverContext)
+  if (!ctx) throw new Error('usePopover must be used within PopoverProvider')
+  return ctx
+}
+
+export function PopoverProvider({ children }) {
+  const [popover, setPopover] = useState<PopoverState>({
+    visible: false,
+    content: null,
+    position: { top: 0, left: 0 },
+  })
+
+  const openPopover = ({
+    content,
+    anchorRef,
+  }: {
+    content: React.ReactNode
+    anchorRef: React.RefObject<View>
+  }) => {
+    anchorRef.current?.measureInWindow((x, y, width) => {
+      setPopover({
+        visible: true,
+        content,
+        position: {
+          left: Math.max(Dimensions.get('window').width - 2 * x, x - width),
+          bottom: Dimensions.get('window').height - y - 10,
+        },
+      })
+    })
+  }
+
+  const closePopover = () => {
+    setPopover({ visible: false, content: null, position: { top: 0, left: 0 } })
+  }
+
+  return (
+    <PopoverContext.Provider value={{ openPopover, closePopover }}>
+      {children}
+
+      <Modal
+        visible={popover.visible}
+        transparent
+        animationType="fade"
+        onRequestClose={closePopover}
+      >
+        <TouchableWithoutFeedback onPress={closePopover}>
+          <View style={styles.backdrop}>
+            <TouchableWithoutFeedback>
+              <View style={[styles.popover, popover.position]}>{popover.content}</View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </PopoverContext.Provider>
+  )
+}
+
+const styles = StyleSheet.create({
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  popover: {
+    position: 'absolute',
+    padding: 16,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
+  },
+})

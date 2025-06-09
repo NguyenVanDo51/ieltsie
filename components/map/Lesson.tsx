@@ -1,109 +1,87 @@
-import { Link } from "expo-router";
-import { FC } from "react";
-import { Pressable, View } from "react-native";
-import { Text } from "../ui/text";
-import { Image } from "expo-image";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Button } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { Circle } from "./Circle";
-import { IScore } from "~/lib/storage";
-import { TOTAL_QUIZ_PER_LESSON } from "~/lib/constants";
+import { Link } from 'expo-router'
+import { FC, useRef } from 'react'
+import { Pressable, View } from 'react-native'
+import { Text } from '../ui/text'
+import { Image } from 'expo-image'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { Button } from '../ui/button'
+import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
+import { Circle } from './Circle'
+import { IScore } from '~/lib/storage'
+import { TOTAL_QUIZ_PER_LESSON } from '~/lib/constants'
+import { usePopover } from '../ui/popover'
 
 export type LessonProps = {
-  lessonId1: string;
-  icon?: any;
-  marginLeft?: number;
-  lastLessonId: string | undefined;
-  addition?: "prev" | "all";
-  popoverContent?: string;
-  popoverDescription?: string;
-  scores: IScore;
-  totalWord: number;
-  topicId: string;
-};
+  lessonId1: string
+  icon?: any
+  marginLeft?: number
+  addition?: 'prev' | 'all'
+  popoverContent?: string
+  popoverDescription?: string
+  scores: IScore
+  topicId: string
+  disabled?: boolean
+  onStart: () => void
+}
 
 export const Lesson: FC<LessonProps> = ({
   lessonId1,
-  addition,
   marginLeft = 0,
   icon,
   popoverContent,
   popoverDescription,
   scores,
-  totalWord,
-  lastLessonId = undefined,
-  topicId,
+  disabled = false,
+  onStart,
 }) => {
-  const insets = useSafeAreaInsets();
-  const contentInsets = {
-    top: insets.top,
-    bottom: insets.bottom,
-    left: 12,
-    right: 12,
-  };
+  const anchorRef = useRef<View>(null)
+  const { openPopover, closePopover } = usePopover()
 
-  const progress = Math.round(
-    ((scores[lessonId1] || 0) / (totalWord * TOTAL_QUIZ_PER_LESSON)) * 100
-  );
-  const isDisabled = progress < 1 && lessonId1 !== lastLessonId;
+  const progress = Math.round(((scores[lessonId1] || 0) / TOTAL_QUIZ_PER_LESSON) * 100)
 
   return (
-    <Tooltip delayDuration={150}>
-      <View
-        className="gap-4 p-2 flex justify-center items-center"
-        style={{ marginLeft }}
-      >
-        <TooltipTrigger asChild disabled={isDisabled}>
-          <Pressable>
-            <Circle width={90} progress={progress}>
-              {isDisabled && (
-                <View className="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-full bg-white/50 z-10" />
-              )}
+    <View className="gap-4 p-2 flex justify-center items-center" style={{ marginLeft }}>
+      <Pressable
+        ref={anchorRef}
+        disabled={disabled}
+        onPress={() => {
+          openPopover({
+            anchorRef,
+            content: (
+              <View className="w-60 gap-1 rounded-2xl">
+                <Text className="font-medium leading-none text-xl">{popoverContent}</Text>
 
-              <View className="p-2 rounded-lg">
-                <Image
-                  source={icon}
-                  style={{ width: 50, height: 50 }}
-                  contentFit="cover"
-                />
+                {popoverDescription && <Text className="text-gray-600">{popoverDescription}</Text>}
+
+                <Button
+                  className="w-full mt-4 web:rounded-xl"
+                  size="default"
+                  onPress={() => {
+                    onStart()
+                    setTimeout(() => {
+                      closePopover()
+                    }, 50)
+                  }}
+                >
+                  <Text className="native:text-lg font-bold uppercase web:text-sm">
+                    Bắt đầu +10 KN
+                  </Text>
+                </Button>
               </View>
-            </Circle>
-          </Pressable>
-        </TooltipTrigger>
-
-        <TooltipContent
-          insets={contentInsets}
-          className="w-80 p-4 gap-1 rounded-2xl"
-        >
-          <Text className="font-medium leading-none text-xl">
-            {popoverContent}
-          </Text>
-
-          {popoverDescription && (
-            <Text className="text-gray-600">{popoverDescription}</Text>
+            ),
+          })
+        }}
+      >
+        <Circle width={90} progress={progress}>
+          {disabled && (
+            <View className="absolute top-0 left-0 right-0 bottom-0 w-full h-full rounded-full bg-white/50 z-10" />
           )}
 
-          <Link
-            href={{
-              pathname: "/lessons/[lessonId]",
-              params: {
-                topicId: topicId,
-                lessonId: lessonId1,
-                addition: addition || "",
-              },
-            }}
-            className="mt-4"
-          >
-            <Button className="w-full" size="default">
-              <Text className="text-lg font-bold uppercase web:text-base">
-                Bắt đầu +10 KN
-              </Text>
-            </Button>
-          </Link>
-        </TooltipContent>
-        {/* <Progress value={progress} indicatorClassName="bg-primary" /> */}
-      </View>
-    </Tooltip>
-  );
-};
+          <View className="p-2 rounded-lg">
+            <Image source={icon} style={{ width: 50, height: 50 }} contentFit="cover" />
+          </View>
+        </Circle>
+      </Pressable>
+    </View>
+  )
+}

@@ -17,7 +17,7 @@ export const useLastLessonId = create<LastLessonIdState>((set) => ({
     const topicId = await AsyncStorage.getItem('topic_id')
     set({ lastLessonId: lastLessonId || undefined, topicId: topicId || undefined })
   },
-  setLastLesson: async (topicId: string, lessonId: string, ) => {
+  setLastLesson: async (topicId: string, lessonId: string) => {
     await AsyncStorage.setItem('last_lesson_id', lessonId)
     await AsyncStorage.setItem('topic_id', topicId)
     set({ lastLessonId: lessonId })

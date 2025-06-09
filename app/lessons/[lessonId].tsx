@@ -1,65 +1,78 @@
-import React, { useEffect, useMemo, useState, type FC } from "react";
-import { View, Pressable } from "react-native";
-import { ChevronLeft } from "lucide-react-native"; // For the icon
+import React, { useEffect, useMemo, useState, type FC } from 'react'
 
-// Assuming these are defined elsewhere and compatible with RN
-import type { ILesson } from "~/types/word";
-import LearnQuiz from "~/components/learn";
-import { Text } from "~/components/ui/text";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import { IT_VOCAB_LESSONS } from "~/data/vocab";
+import type { ILesson } from '~/types/word'
+import LearnQuiz from '~/components/learn'
+import { useLocalSearchParams } from 'expo-router'
+import { IT_VOCAB_LESSONS } from '~/data/vocab'
+import { Completed } from '~/components/learn/Completed'
+import { useLastLessonId } from '~/store/useLastLessonId'
+import { DATA_ALL_LESSON, DATA_FLAT_LIST } from '~/lib/section'
 
 const LearnPage: FC = () => {
-  const a = useLocalSearchParams();
+  const { lessonId, topicId, addition } = useLocalSearchParams()
 
-  const { lessonId, topicId, addition } = a;
-
-  const [isDoWrongWords, setIsDoWrongWords] = useState(false);
+  const [isDoWrongWords, setIsDoWrongWords] = useState(false)
+  const [isCompleted, setIsCompleted] = useState(false)
+  const setLastLesson = useLastLessonId((t) => t.setLastLesson)
 
   const topic = useMemo(() => {
-    return IT_VOCAB_LESSONS.find((t) => t.id === topicId);
-  }, [topicId]);
+    return IT_VOCAB_LESSONS.find((t) => t.id === topicId)
+  }, [topicId])
 
   const lessonIndex = useMemo(() => {
-    return topic.lessons.findIndex((l) => l.id === lessonId);
-  }, [topicId, lessonId]);
+    return DATA_ALL_LESSON.findIndex((l) => l.id === lessonId)
+  }, [lessonId])
 
   const lesson = useMemo(() => {
-    return topic.lessons[lessonIndex];
-  }, [topicId, lessonId, lessonIndex]);
+    return topic.lessons[lessonIndex]
+  }, [topicId, lessonId, lessonIndex])
 
-  const [currentWords, setCurrentWords] = useState<ILesson["words"]>([]);
+  const [currentWords, setCurrentWords] = useState<ILesson['words']>([])
 
-  const handleWrongWords = (wrongWOrds?: ILesson["words"]) => {
-    // If words are passed, use them; otherwise, use all words from the lesson
-    setCurrentWords(wrongWOrds);
-    setIsDoWrongWords(true);
-  };
+  const handleWrongWords = (wrongWOrds?: ILesson['words']) => {
+    if (wrongWOrds.length < 1) {
+      console.log('save', lesson.id)
+      setLastLesson(topic.id, lesson.id)
+      setIsCompleted(true)
+      return
+    }
+    setCurrentWords(wrongWOrds)
+    setIsDoWrongWords(true)
+  }
+
+  useEffect(() => {
+    if (lesson.id) {
+      setLastLesson(topic.id, lessonId as string)
+    }
+  }, [lesson])
 
   useEffect(() => {
     if (currentWords.length === 0) {
-      const words = [];
+      const words = []
 
       if (!addition) {
-        words.push(...lesson.words);
+        words.push(...lesson.words)
       }
 
-      if (addition === "prev") {
-        // If addition is "prev", get words from the previous lesson
-        const prevLesson = topic.lessons[lessonIndex - 1];
+      if (addition === 'prev') {
+        const prevLesson = topic.lessons[lessonIndex - 1]
         if (prevLesson) {
-          words.push(...prevLesson.words);
+          words.push(...prevLesson.words)
         }
       }
-      if (addition === "all") {
+      if (addition === 'all') {
         topic.lessons.forEach((l) => {
-          words.push(...l.words);
-        });
+          words.push(...l.words)
+        })
       }
 
-      setCurrentWords(words);
+      setCurrentWords(words)
     }
-  }, []);
+  }, [])
+
+  if (isCompleted) {
+    return <Completed />
+  }
 
   return (
     <LearnQuiz
@@ -69,7 +82,7 @@ const LearnPage: FC = () => {
       handleWrongWords={handleWrongWords}
       isDoWrongWords={isDoWrongWords}
     />
-  );
-};
+  )
+}
 
-export default LearnPage;
+export default LearnPage
