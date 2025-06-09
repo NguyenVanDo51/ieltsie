@@ -26,6 +26,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
 
     lessonParts.push({
       id: `${topic.lessons[0].id}-start`,
+      topicId: topic.id,
       lessonId1: topic.lessons[0].id,
       marginLeft: marginLefts[0],
       icon: StartImg,
@@ -38,6 +39,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
 
     lessonParts.push({
       id: `${topic.lessons[0].id}-new`,
+      topicId: topic.id,
       lessonId1: topic.lessons[1].id,
       marginLeft: marginLefts[1],
       icon: NewLessonImg,
@@ -50,6 +52,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
 
     lessonParts.push({
       id: `${topic.lessons[1].id}-practice`,
+      topicId: topic.id,
       lessonId1: topic.lessons[1].id,
       addition: 'prev',
       marginLeft: marginLefts[2],
@@ -62,6 +65,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
     })
     lessonParts.push({
       id: `${topic.lessons[2].id}-new`,
+      topicId: topic.id,
       lessonId1: topic.lessons[2].id,
       marginLeft: marginLefts[3],
       icon: NewLessonImg,
@@ -74,6 +78,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
 
     lessonParts.push({
       id: `${topic.lessons[2].id}-practice`,
+      topicId: topic.id,
       lessonId1: topic.lessons[2].id,
       addition: 'prev',
       marginLeft: marginLefts[4],
@@ -86,6 +91,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
     })
     lessonParts.push({
       id: `${topic.lessons[3].id}-new`,
+      topicId: topic.id,
       lessonId1: topic.lessons[3].id,
       marginLeft: marginLefts[5],
       icon: NewLessonImg,
@@ -97,6 +103,7 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
     })
     lessonParts.push({
       id: `${topic.lessons[3].id}-practice`,
+      topicId: topic.id,
       lessonId1: topic.lessons[3].id,
       addition: 'prev',
       marginLeft: marginLefts[6],
@@ -109,8 +116,9 @@ export const transformDataSection = (data: ITopic[], scores: IScore, lastLessonI
     })
     lessonParts.push({
       id: `${topic.lessons[3].id}-final`,
+      topicId: topic.id,
       lessonId1: topic.lessons[3].id,
-      addition: 'allTopic',
+      addition: 'all',
       marginLeft: marginLefts[7],
       icon: FinalImg,
       popoverContent: 'Ôn tập tất cả từ mới',

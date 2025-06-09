@@ -12,3 +12,4 @@ export function getRandomInt(min: number, max: number, except: number[] = []): n
   } while (except.includes(randomInt))
   return randomInt
 }
+

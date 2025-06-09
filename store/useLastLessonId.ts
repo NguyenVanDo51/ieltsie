@@ -1,20 +1,25 @@
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { create } from 'zustand'
 import { getLastLessonId, setLastLessonId } from '~/lib/storage'
 
 type LastLessonIdState = {
-  lastLessonId: string
+  topicId?: string
+  lastLessonId?: string
   fetchLastLessonId: () => Promise<void>
-  setLastLessonId: (lessonId: string) => Promise<void>
+  setLastLesson: (lessonId: string, topicId: string) => Promise<void>
 }
 
 export const useLastLessonId = create<LastLessonIdState>((set) => ({
-  lastLessonId: '',
+  topicId: undefined,
+  lastLessonId: undefined,
   fetchLastLessonId: async () => {
-    const lastLessonId = await getLastLessonId()
-    set({ lastLessonId: lastLessonId || '' })
+    const lastLessonId = await AsyncStorage.getItem('last_lesson_id')
+    const topicId = await AsyncStorage.getItem('topic_id')
+    set({ lastLessonId: lastLessonId || undefined, topicId: topicId || undefined })
   },
-  setLastLessonId: async (lessonId: string) => {
-    setLastLessonId(lessonId)
+  setLastLesson: async (topicId: string, lessonId: string, ) => {
+    await AsyncStorage.setItem('last_lesson_id', lessonId)
+    await AsyncStorage.setItem('topic_id', topicId)
     set({ lastLessonId: lessonId })
   },
 }))

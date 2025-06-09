@@ -12,7 +12,7 @@ import { Button } from '../ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Circle } from './Circle'
 import { IScore } from '~/lib/storage'
-import { QUESTION_MULTIPLES } from '~/lib/constants'
+import { TOTAL_QUIZ_PER_LESSON } from '~/lib/constants'
 import { Lesson } from './Lesson'
 
 const StartImg = require('~/assets/lesson/start.gif')
@@ -129,7 +129,7 @@ export const LessonMap: FC<{ topic: ITopic; scores: IScore; lastLessonId: string
 
       <Lesson
         lessonId1={topic.lessons[3].id}
-        addition="allTopic"
+        addition="all"
         marginLeft={marginLefts[7]}
         icon={FinalImg}
         popoverContent="Ôn tập tất cả từ mới"

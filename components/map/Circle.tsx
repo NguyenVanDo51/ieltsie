@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View } from 'react-native'
 import Svg, { Circle as SvgCircle } from 'react-native-svg'
 
 export const Circle = ({ children = null, width = 100, progress = 0 }) => {
