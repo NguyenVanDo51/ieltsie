@@ -7,6 +7,7 @@ import {
   TouchableWithoutFeedback,
   LayoutRectangle,
 } from 'react-native'
+import { IS_ANDROID } from '~/lib/constants'
 
 type PopoverState = {
   visible: boolean
@@ -27,6 +28,8 @@ export function usePopover() {
   return ctx
 }
 
+const yDivide = IS_ANDROID ? 60 : 10
+
 export function PopoverProvider({ children }) {
   const [popover, setPopover] = useState<PopoverState>({
     visible: false,
@@ -41,13 +44,14 @@ export function PopoverProvider({ children }) {
     content: React.ReactNode
     anchorRef: React.RefObject<View>
   }) => {
-    anchorRef.current?.measureInWindow((x, y, width) => {
+    anchorRef.current?.measureInWindow((x, y, width, height) => {
+
       setPopover({
         visible: true,
         content,
         position: {
           left: Math.max(Dimensions.get('window').width - 2 * x, x - width),
-          bottom: Dimensions.get('window').height - y - 10,
+          bottom: Dimensions.get('window').height - y - yDivide,
         },
       })
     })

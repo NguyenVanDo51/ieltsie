@@ -24,6 +24,16 @@ export type LessonProps = {
   onStart: () => void
 }
 
+const scoreProcessMapping = {
+  0: 0,
+  1: 33.333,
+  2: 66.666,
+  3: 100,
+  4: 100,
+  5: 100,
+  6: 100,
+}
+
 export const Lesson: FC<LessonProps> = ({
   lessonId1,
   marginLeft = 0,
@@ -37,7 +47,7 @@ export const Lesson: FC<LessonProps> = ({
   const anchorRef = useRef<View>(null)
   const { openPopover, closePopover } = usePopover()
 
-  const progress = Math.round(((scores[lessonId1] || 0) / TOTAL_QUIZ_PER_LESSON) * 100)
+  const progress = scoreProcessMapping[scores[lessonId1] || 0]
 
   return (
     <View className="gap-4 p-2 flex justify-center items-center" style={{ marginLeft }}>
@@ -60,7 +70,7 @@ export const Lesson: FC<LessonProps> = ({
                     onStart()
                     setTimeout(() => {
                       closePopover()
-                    }, 50)
+                    }, 1)
                   }}
                 >
                   <Text className="native:text-lg font-bold uppercase web:text-sm">

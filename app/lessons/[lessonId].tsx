@@ -6,7 +6,8 @@ import { useLocalSearchParams } from 'expo-router'
 import { IT_VOCAB_LESSONS } from '~/data/vocab'
 import { Completed } from '~/components/learn/Completed'
 import { useLastLessonId } from '~/store/useLastLessonId'
-import { DATA_ALL_LESSON, DATA_FLAT_LIST } from '~/lib/section'
+import { DATA_ALL_LESSON } from '~/lib/section'
+import { useScores } from '~/store/useScore'
 
 const LearnPage: FC = () => {
   const { lessonId, topicId, addition } = useLocalSearchParams()
@@ -14,6 +15,7 @@ const LearnPage: FC = () => {
   const [isDoWrongWords, setIsDoWrongWords] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
   const setLastLesson = useLastLessonId((t) => t.setLastLesson)
+  const addCompletedLesson = useScores((t) => t.addCompletedLesson)
 
   const topic = useMemo(() => {
     return IT_VOCAB_LESSONS.find((t) => t.id === topicId)
@@ -31,9 +33,9 @@ const LearnPage: FC = () => {
 
   const handleWrongWords = (wrongWOrds?: ILesson['words']) => {
     if (wrongWOrds.length < 1) {
-      console.log('save', lesson.id)
       setLastLesson(topic.id, lesson.id)
       setIsCompleted(true)
+      addCompletedLesson(lessonId as string)
       return
     }
     setCurrentWords(wrongWOrds)

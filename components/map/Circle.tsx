@@ -19,20 +19,22 @@ export const Circle = ({ children = null, width = 100, progress = 0 }) => {
           r={radius}
           strokeWidth={strokeWidth}
         />
-        <SvgCircle
-          stroke="#3b82f6" // Tailwind blue-500
-          fill="none"
-          cx={width / 2}
-          cy={width / 2}
-          r={radius}
-          strokeWidth={strokeWidth}
-          strokeDasharray={circumference}
-          strokeDashoffset={strokeDashoffset}
-          strokeLinecap="round"
-          rotation="-90"
-          originX={width / 2}
-          originY={width / 2}
-        />
+        {progress > 0 && (
+          <SvgCircle
+            stroke="#3b82f6" // Tailwind blue-500
+            fill="none"
+            cx={width / 2}
+            cy={width / 2}
+            r={radius}
+            strokeWidth={strokeWidth}
+            strokeDasharray={circumference}
+            strokeDashoffset={strokeDashoffset}
+            strokeLinecap="round"
+            rotation="-90"
+            originX={width / 2}
+            originY={width / 2}
+          />
+        )}
       </Svg>
 
       {/* Inner white circle & children */}

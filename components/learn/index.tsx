@@ -38,7 +38,6 @@ const LearnQuiz: FC<{
   const [currentIndex, setCurrentIndex] = useState(getRandomInt(0, words.length - 1))
   const [type, setType] = useState<LearnQuizType>(getRandomQuizType())
   const [score, setScore] = useState(0)
-  const [savedScores, setSavedScores] = useState<Record<string, number>>({})
 
   const allWords = useMemo(() => {
     return topic.lessons.reduce((acc, lesson) => {
@@ -98,19 +97,6 @@ const LearnQuiz: FC<{
     }
     setResult(null)
   }
-
-  useEffect(() => {
-    getScores().then((scores) => {
-      setSavedScores(scores)
-    })
-  }, [])
-
-  // lưu điểm số nếu cao hơn điểm đã lưu
-  useEffect(() => {
-    if (score > (savedScores[lesson.id] || 0)) {
-      setScores(lesson.id, Math.max(score, totalQuestions))
-    }
-  }, [score, lesson.id, savedScores])
 
   // cập nhật last lesson khi hoàn thành
   useEffect(() => {

@@ -1,5 +1,4 @@
 import { View, Text, SectionList } from 'react-native'
-import { IT_VOCAB_LESSONS } from '~/data/vocab'
 import { getScores } from '~/lib/storage'
 import { useEffect, useMemo, useState } from 'react'
 import { useLastLessonId } from '~/store/useLastLessonId'
@@ -7,40 +6,18 @@ import { Lesson } from '~/components/map/Lesson'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useRouter } from 'expo-router'
 import { DATA_ALL_LESSON, DATA_FLAT_LIST } from '~/lib/section'
+import { useScores } from '~/store/useScore'
 
 export default function HomePage() {
-  const [scores, setScores] = useState<Record<string, number>>({})
-  const { lastLessonId, fetchLastLessonId } = useLastLessonId((t) => t)
-  const [loading, setLoading] = useState(true)
+  const scores = useScores((t) => t.scores)
   const router = useRouter()
 
-  const initData = async () => {
-    setLoading(true)
-
-    await getScores().then((savedScore) => {
-      setScores(savedScore)
-    })
-
-    await fetchLastLessonId()
-    setLoading(false)
-  }
-
   const lastLessonIndex = useMemo(() => {
-    return DATA_ALL_LESSON.findIndex((t) => t.id === lastLessonId)
-  }, [lastLessonId])
+    return DATA_ALL_LESSON.findIndex((t) => !scores[t.id])
+  }, [scores])
 
-  useEffect(() => {
-    initData()
-  }, [])
-  console.log('lastLessonIndex', lastLessonId, lastLessonIndex)
   return (
     <SafeAreaView className="flex-1">
-      {loading && (
-        <View className="flex-1 items-center justify-center">
-          <Text className="text-gray-500">Loading...</Text>
-        </View>
-      )}
-
       <SectionList
         sections={DATA_FLAT_LIST}
         keyExtractor={(item) => item.id}

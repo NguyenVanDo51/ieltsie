@@ -1,3 +1,5 @@
+import { Platform } from "react-native";
+
 export const NAV_THEME = {
   light: {
     background: "hsl(0 0% 100%)", // background
@@ -20,3 +22,7 @@ export const NAV_THEME = {
 export const TOTAL_QUIZ_PER_LESSON = 5;
 export const APP_NAME = "Ieltsie";
 export const APP_VERSION = "1.0.0";
+
+export const IS_ANDROID = Platform.OS === 'android'
+export const IS_IOS = Platform.OS === 'ios'
+export const IS_WEB = Platform.OS === 'web'
