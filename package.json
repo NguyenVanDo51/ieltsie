@@ -3,11 +3,6 @@
   "license": "0BSD",
   "version": "1.0.0",
   "main": "expo-router/entry",
-  "engines": {
-    "node": ">=22.9.0",
-    "pnpm": ">=10.12.1"
-  },
-  "packageManager": "pnpm@10.12.1",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
