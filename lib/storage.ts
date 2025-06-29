@@ -26,21 +26,3 @@ export const setScores = async (lessonId: ILesson['id'], score: number = 0) => {
     console.error('Failed to set score:', error)
   }
 }
-
-export const getLastLessonId = async (): Promise<string | null> => {
-  try {
-    const stored = await AsyncStorage.getItem('last_lesson_id')
-    return stored
-  } catch (error) {
-    console.error('Failed to get last lesson ID:', error)
-    return null
-  }
-}
-
-export const setLastLessonId = async (lessonId: ILesson['id']) => {
-  try {
-    await AsyncStorage.setItem('last_lesson_id', lessonId)
-  } catch (error) {
-    console.error('Failed to set last lesson ID:', error)
-  }
-}

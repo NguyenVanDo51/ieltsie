@@ -3,6 +3,8 @@ import { View, ScrollView, TouchableOpacity } from 'react-native'
 import type { IWord } from '~/types/word'
 import { cn } from '~/lib/utils'
 import { Text } from '../ui/text'
+import { useNativeLanguage } from '~/store/useNativeLanguage'
+import { usetargetLanguage } from '~/store/useTargetLanguage'
 
 type Props = {
   words: IWord[]
@@ -16,6 +18,9 @@ export const Matching: React.FC<Props> = ({ words, onCorrect }) => {
 
   const [shuffledLeft, setShuffledLeft] = useState<IWord[]>([])
   const [shuffledRight, setShuffledRight] = useState<IWord[]>([])
+
+  const targetLang = usetargetLanguage((t) => t.targetLanguage)
+  const nativeLang = useNativeLanguage((t) => t.nativeLanguage)
 
   useEffect(() => {
     setShuffledLeft([...words].sort(() => Math.random() - 0.5))
@@ -80,7 +85,7 @@ export const Matching: React.FC<Props> = ({ words, onCorrect }) => {
               disabled={matchedPairs.has(word.id)}
               className={cn('p-4 rounded-lg', getButtonStyle(word.id, selectedLeft === word.id))}
             >
-              <Text className="text-base text-center">{word.en}</Text>
+              <Text className="text-base text-center">{word[targetLang]}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -94,7 +99,7 @@ export const Matching: React.FC<Props> = ({ words, onCorrect }) => {
               disabled={matchedPairs.has(word.id)}
               className={cn('p-4 rounded-lg', getButtonStyle(word.id, selectedRight === word.id))}
             >
-              <Text className="text-base text-center">{word.vi}</Text>
+              <Text className="text-base text-center">{word[nativeLang]}</Text>
             </TouchableOpacity>
           ))}
         </View>

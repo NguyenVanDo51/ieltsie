@@ -1,10 +1,10 @@
-## MVP
+##  MVP
 
 - [ ] Chọn ngôn ngữ muốn học
 - [ ] Tiến trình 90% bài hiện tại thì mới mở khoá bài tiếp theo
 - [ ] Streak: hiển thị số ngày liên tục học tập
 - [ ] 30 topics, mỗi topic 20 từ
-- [ ] Fix lỗi ngẫu nhiên
+- [x] Fix lỗi ngẫu nhiên
 - [ ] Landing page (có roalmap)
 - [ ] Logo (tên ứng dụng)
 

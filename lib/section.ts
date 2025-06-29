@@ -119,4 +119,3 @@ const transformDataSection = (data: ITopic[]) => {
 export const DATA_FLAT_LIST = transformDataSection(IT_VOCAB_LESSONS)
 
 export const DATA_ALL_LESSON = DATA_FLAT_LIST.map((item) => item.data).flat()
-console.log(DATA_ALL_LESSON[0])

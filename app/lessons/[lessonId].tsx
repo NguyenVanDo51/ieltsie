@@ -5,7 +5,6 @@ import LearnQuiz from '~/components/learn'
 import { useLocalSearchParams } from 'expo-router'
 import { IT_VOCAB_LESSONS } from '~/data/vocab'
 import { Completed } from '~/components/learn/Completed'
-import { useLastLessonId } from '~/store/useLastLessonId'
 import { DATA_ALL_LESSON } from '~/lib/section'
 import { useScores } from '~/store/useScore'
 
@@ -14,7 +13,6 @@ const LearnPage: FC = () => {
 
   const [isDoWrongWords, setIsDoWrongWords] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
-  const setLastLesson = useLastLessonId((t) => t.setLastLesson)
   const addCompletedLesson = useScores((t) => t.addCompletedLesson)
 
   const topic = useMemo(() => {
@@ -33,7 +31,6 @@ const LearnPage: FC = () => {
 
   const handleWrongWords = (wrongWOrds?: ILesson['words']) => {
     if (wrongWOrds.length < 1) {
-      setLastLesson(topic.id, lesson.id)
       setIsCompleted(true)
       addCompletedLesson(lessonId as string)
       return
@@ -41,12 +38,6 @@ const LearnPage: FC = () => {
     setCurrentWords(wrongWOrds)
     setIsDoWrongWords(true)
   }
-
-  useEffect(() => {
-    if (lesson.id) {
-      setLastLesson(topic.id, lessonId as string)
-    }
-  }, [lesson])
 
   useEffect(() => {
     if (currentWords.length === 0) {

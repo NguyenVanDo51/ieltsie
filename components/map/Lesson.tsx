@@ -73,7 +73,7 @@ export const Lesson: FC<LessonProps> = ({
                     }, 1)
                   }}
                 >
-                  <Text className="native:text-lg font-bold uppercase web:text-sm">
+                  <Text className="font-bold uppercase">
                     Bắt đầu +10 KN
                   </Text>
                 </Button>

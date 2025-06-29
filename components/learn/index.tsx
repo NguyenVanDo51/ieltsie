@@ -2,7 +2,6 @@ import React, { useState, type FC, useMemo, useEffect } from 'react'
 import { View, Pressable } from 'react-native'
 import { X } from 'lucide-react-native' // Use lucide-react-native for icons
 import { Image } from 'expo-image'
-import { getScores, setScores } from '~/lib/storage'
 import { SelectOne } from '~/components/learn/SelectOne'
 import { Matching } from '~/components/learn/Matching'
 import { useRouter } from 'expo-router'
@@ -14,10 +13,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { playCorrectAudio, playIncorrectAudio } from '~/lib/audio'
 import { TOTAL_QUIZ_PER_LESSON } from '~/lib/constants'
 import { Progress } from '../ui/progress'
-import { useLastLessonId } from '~/store/useLastLessonId'
 import { LearnQuizType } from './type'
-import { getCorrectAnswer, getOptions, getQuestion, getRandomQuizType } from './utils'
-import { Completed } from './Completed'
+import { getRandomQuizType } from './utils'
+import { usetargetLanguage } from '~/store/useTargetLanguage'
+import { useNativeLanguage } from '~/store/useNativeLanguage'
 
 const BrokenHeartImage = require('~/assets/lesson/broken-heart.png')
 
@@ -29,6 +28,8 @@ const LearnQuiz: FC<{
   handleWrongWords: (wrongWords?: ILesson['words']) => void
 }> = ({ words, topic, lesson, isDoWrongWords, handleWrongWords }) => {
   const totalQuestions = isDoWrongWords ? words.length : TOTAL_QUIZ_PER_LESSON
+  const targetLang = usetargetLanguage(t => t.targetLanguage)
+  const nativeLang = useNativeLanguage(t => t.nativeLanguage)
 
   const router = useRouter()
   const insets = useSafeAreaInsets()
@@ -49,12 +50,81 @@ const LearnQuiz: FC<{
 
   const currentWord = words[currentIndex]
 
-  const correctAnswer = useMemo(() => getCorrectAnswer(type, currentWord), [currentWord, type])
+  const getRandomOptions = (
+  allWords: IWord[],
+  currentWord: IWord,
+  field: keyof Pick<IWord, 'en' | 'vi' | 'img'>,
+  count: number = getRandomInt(2, 3)
+): string[] => {
+  const otherWords = allWords.filter((w) => w.id !== currentWord.id)
+  const shuffled = [...otherWords].sort(() => Math.random() - 0.5)
+  return [currentWord[field], ...shuffled.slice(0, count).map((w) => w[field])].sort(
+    () => Math.random() - 0.5
+  )
+}
 
-  const question = useMemo(() => getQuestion(type, currentWord), [currentWord, type])
+  const correctAnswer = useMemo(() => {
+    if (!currentWord) return ''
+
+  switch (type) {
+    case LearnQuizType.EN_TO_VI:
+      return currentWord[nativeLang]
+    case LearnQuizType.EN_TO_IMAGE:
+      return currentWord.img
+    case LearnQuizType.VI_TO_EN:
+      return currentWord[targetLang]
+    case LearnQuizType.PICK_IN_EN_EXAMPLE:
+      return currentWord[targetLang]
+    default:
+      return ''
+  }
+  }, [currentWord, type])
+
+  const question = useMemo(() => {
+    if (!currentWord) return ''
+
+  switch (type) {
+    case LearnQuizType.EN_TO_VI:
+      return currentWord[targetLang]
+    case LearnQuizType.EN_TO_IMAGE:
+      return currentWord[targetLang]
+    case LearnQuizType.VI_TO_EN:
+      return currentWord[nativeLang]
+    // TODO: Write unit tests for this
+    case LearnQuizType.PICK_IN_EN_EXAMPLE:
+      return currentWord.example[getRandomInt(0, currentWord.example.length - 1)][targetLang]
+        .toLowerCase()
+        .replace(currentWord[targetLang].toLowerCase(), '________')
+    default:
+      return ''
+  }
+  }, [currentWord, type, nativeLang, targetLang])
 
   const options = useMemo(
-    () => getOptions(type, currentWord, allWords),
+    () => {
+        if (!currentWord) return []
+      
+        switch (type) {
+          case LearnQuizType.EN_TO_VI:
+            return getRandomOptions(allWords, currentWord, nativeLang as 'en' | 'vi')
+          case LearnQuizType.EN_TO_IMAGE:
+            return getRandomOptions(allWords, currentWord, 'img').map((imgUri) => ({
+              text: imgUri,
+              render: (text: string) => (
+                <Image
+                  source={{ uri: text }} // Use { uri: text } for network images
+                  alt={imgUri} // alt is not directly used in RN Image
+                  className="w-24 h-24 object-cover mx-auto"
+                />
+              ),
+            }))
+          case LearnQuizType.VI_TO_EN:
+          case LearnQuizType.PICK_IN_EN_EXAMPLE:
+            return getRandomOptions(allWords, currentWord, 'en')
+          default:
+            return []
+        }
+    },
     [currentWord, type, allWords]
   )
 
@@ -113,8 +183,6 @@ const LearnQuiz: FC<{
     setWrongWords([])
   }, [words])
 
-  console.log({ score, totalQuestions, wrongWords })
-
   const renderContent = () => {
     if (!currentWord) return null
 
@@ -122,7 +190,7 @@ const LearnQuiz: FC<{
       case LearnQuizType.EN_TO_VI:
         return (
           <SelectOne
-            question={currentWord.en}
+            question={currentWord[targetLang]}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -132,7 +200,7 @@ const LearnQuiz: FC<{
       case LearnQuizType.EN_TO_IMAGE:
         return (
           <SelectOne
-            question={currentWord.en}
+            question={currentWord[targetLang]}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -142,7 +210,7 @@ const LearnQuiz: FC<{
       case LearnQuizType.VI_TO_EN:
         return (
           <SelectOne
-            question={currentWord.vi}
+            question={currentWord[nativeLang]}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -205,8 +273,8 @@ const LearnQuiz: FC<{
 
         {currentWord?.explanation && type !== LearnQuizType.MATCHING && (
           <View className="flex flex-col gap-2 px-4">
-            <Text>{currentWord.explanation.en}</Text>
-            <Text>{currentWord.explanation.vi}</Text>
+            <Text>{currentWord.explanation[targetLang]}</Text>
+            <Text>{currentWord.explanation[nativeLang]}</Text>
           </View>
         )}
 
