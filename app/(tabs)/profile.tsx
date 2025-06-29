@@ -22,41 +22,13 @@ export default function ProfileScreen() {
   const targetLang = LANGUAGES.find(lang => lang.code === targetLanguage)
   const nativeLang = LANGUAGES.find(lang => lang.code === nativeLanguage)
 
-  const handleChangeTargetLanguage = () => {
-    Alert.alert(
-      'Thay đổi ngôn ngữ học',
-      'Bạn có muốn thay đổi ngôn ngữ đang học không? Tiến trình hiện tại sẽ được giữ lại.',
-      [
-        { text: 'Hủy', style: 'cancel' },
-        { 
-          text: 'Thay đổi', 
-          onPress: () => router.push('/select-language')
-        }
-      ]
-    )
-  }
-
-  const handleChangeNativeLanguage = () => {
-    Alert.alert(
-      'Thay đổi ngôn ngữ hiển thị',
-      'Bạn có muốn thay đổi ngôn ngữ hiển thị giao diện không?',
-      [
-        { text: 'Hủy', style: 'cancel' },
-        { 
-          text: 'Thay đổi', 
-          onPress: () => router.push('/select-native-language')
-        }
-      ]
-    )
-  }
-
   const menuItems = [
     {
       id: 'target-language',
       title: 'Ngôn ngữ học',
       subtitle: targetLang?.name || 'Chưa chọn',
       icon: Globe,
-      onPress: handleChangeTargetLanguage,
+      onPress: () => router.push('/select-language'),
       rightElement: targetLang && (
         <Image source={targetLang.image} style={styles.flagIcon} contentFit="cover" />
       ),
@@ -66,7 +38,7 @@ export default function ProfileScreen() {
       title: 'Ngôn ngữ hiển thị',
       subtitle: nativeLang?.name || 'Chưa chọn',
       icon: Settings,
-      onPress: handleChangeNativeLanguage,
+      onPress: () => router.push('/select-native-language'),
       rightElement: nativeLang && (
         <Image source={nativeLang.image} style={styles.flagIcon} contentFit="cover" />
       ),

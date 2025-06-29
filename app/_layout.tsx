@@ -16,7 +16,7 @@ import { usetargetLanguage } from '~/store/useTargetLanguage'
 import { Indicator } from '@rn-primitives/progress'
 import { useNativeLanguage } from '~/store/useNativeLanguage'
 import { useScores } from '~/store/useScore'
-import { useFrameworkReady } from '@/hooks/useFrameworkReady'
+import { useFrameworkReady } from '~/hooks/useFrameworkReady'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
