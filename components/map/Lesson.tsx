@@ -1,14 +1,10 @@
-import { Link } from 'expo-router'
 import { FC, useRef } from 'react'
 import { Pressable, View } from 'react-native'
 import { Text } from '../ui/text'
 import { Image } from 'expo-image'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Button } from '../ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '../ui/tooltip'
 import { Circle } from './Circle'
 import { IScore } from '~/lib/storage'
-import { TOTAL_QUIZ_PER_LESSON } from '~/lib/constants'
 import { usePopover } from '../ui/popover'
 
 export type LessonProps = {
