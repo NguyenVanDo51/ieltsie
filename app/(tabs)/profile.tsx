@@ -7,7 +7,7 @@ import { useScores } from '~/store/useScore'
 import { usetargetLanguage } from '~/store/useTargetLanguage'
 import { useNativeLanguage } from '~/store/useNativeLanguage'
 import { LANGUAGES } from '~/lib/constants'
-import { User, Globe, Settings, HelpCircle, LogOut, ChevronRight } from 'lucide-react-native'
+import { User, Globe, Settings, CircleHelp as HelpCircle, LogOut, ChevronRight } from 'lucide-react-native'
 import { Image } from 'expo-image'
 
 export default function ProfileScreen() {
