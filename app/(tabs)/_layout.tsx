@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router'
 import { StyleSheet } from 'react-native'
-import { Home, BookOpen, Trophy, User } from 'lucide-react-native'
+import { Chrome as Home, BookOpen, Trophy, User } from 'lucide-react-native'
 import { designTokens } from '~/components/design-system'
 
 export default function TabLayout() {
