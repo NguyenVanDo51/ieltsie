@@ -76,7 +76,12 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
 
         <View style={{ flex: 1, marginTop: insets.top }}>
-          <Stack screenOptions={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="select-language" options={{ headerShown: false }} />
+            <Stack.Screen name="select-native-language" options={{ headerShown: false }} />
+            <Stack.Screen name="lessons" options={{ headerShown: false }} />
+          </Stack>
         </View>
 
         <PortalHost />
