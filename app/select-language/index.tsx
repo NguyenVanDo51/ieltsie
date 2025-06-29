@@ -1,12 +1,16 @@
-import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
-import { useEffect, useState } from 'react'
-import { View } from 'react-native'
-import { Button } from '~/components/ui/button'
-import { Text } from '~/components/ui/text'
-import ViewWithFixedButton from '~/components/views/ViewWithFixedButton'
+import { useState } from 'react'
+import { View, StyleSheet } from 'react-native'
+import { 
+  GradientBackground, 
+  Header, 
+  LanguageCard, 
+  Grid, 
+  Button, 
+  Layout,
+  Typography 
+} from '~/components/design-system'
 import { LANGUAGES } from '~/lib/constants'
-import { cn } from '~/lib/utils'
 import { usetargetLanguage } from '~/store/useTargetLanguage'
 
 const Screen = () => {
@@ -14,35 +18,58 @@ const Screen = () => {
   const [value, setValue] = useState<string>(LANGUAGES[0].code)
   const router = useRouter()
 
-  return (
-    <ViewWithFixedButton
-      onButtonPress={() => {
-        setTargetLanguage(value)
-        router.push('/select-native-language')
-      }}
-    >
-      <View className="flex-1 p-4 flex-col gap-2">
-        <Text className='text-2xl font-bold mb-2'>Chọn ngôn ngữ muốn học</Text>
+  const handleContinue = () => {
+    setTargetLanguage(value)
+    router.push('/select-native-language')
+  }
 
-        {LANGUAGES.map((language) => (
+  return (
+    <GradientBackground variant="primary">
+      <Layout safeArea scrollable>
+        <Header
+          title="Chọn ngôn ngữ muốn học"
+          subtitle="Hãy chọn ngôn ngữ bạn muốn học để bắt đầu hành trình của mình"
+          variant="transparent"
+        />
+
+        <Grid style={styles.grid}>
+          {LANGUAGES.map((language) => (
+            <LanguageCard
+              key={language.code}
+              name={language.name}
+              image={language.image}
+              selected={language.code === value}
+              onPress={() => setValue(language.code)}
+              variant="gradient"
+            />
+          ))}
+        </Grid>
+
+        <View style={styles.footer}>
           <Button
-            variant="outline"
-            className={cn(
-              'w-full flex-row gap-4 px-4 justify-start',
-              language.code === value ? 'border-primary' : ''
-            )}
-            key={language.code}
-            onPress={() => {
-              setValue(language.code)
-            }}
-          >
-            <Image source={language.image} style={{ width: 40, height: 40 }} contentFit="cover" />
-            <Text>{language.name}</Text>
-          </Button>
-        ))}
-      </View>
-    </ViewWithFixedButton>
+            title="Tiếp tục"
+            onPress={handleContinue}
+            gradient
+            size="lg"
+            style={styles.button}
+          />
+        </View>
+      </Layout>
+    </GradientBackground>
   )
 }
+
+const styles = StyleSheet.create({
+  grid: {
+    marginBottom: 40,
+  },
+  footer: {
+    paddingBottom: 20,
+    paddingTop: 10,
+  },
+  button: {
+    width: '100%',
+  },
+})
 
 export default Screen
