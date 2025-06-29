@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated'
 import { PopoverProvider } from '~/components/ui/popover'
-import { usetargetLanguage, usetargetLanguageState } from '~/store/useTargetLanguage'
+import { usetargetLanguage } from '~/store/useTargetLanguage'
 import { Indicator } from '@rn-primitives/progress'
 import { useNativeLanguage } from '~/store/useNativeLanguage'
 import { useScores } from '~/store/useScore'
