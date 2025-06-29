@@ -16,6 +16,7 @@ import { usetargetLanguage } from '~/store/useTargetLanguage'
 import { Indicator } from '@rn-primitives/progress'
 import { useNativeLanguage } from '~/store/useNativeLanguage'
 import { useScores } from '~/store/useScore'
+import { useFrameworkReady } from '~/hooks/useFrameworkReady'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -34,6 +35,7 @@ const DARK_THEME: Theme = {
 export { ErrorBoundary } from 'expo-router'
 
 export default function RootLayout() {
+  useFrameworkReady();
   const hasMounted = React.useRef(false)
   const { isDarkColorScheme } = useColorScheme()
   const [isLoading, setIsLoading] = React.useState(false)
@@ -76,7 +78,12 @@ export default function RootLayout() {
         <StatusBar style={isDarkColorScheme ? 'light' : 'dark'} />
 
         <View style={{ flex: 1, marginTop: insets.top }}>
-          <Stack screenOptions={{ headerShown: false }} />
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="select-language" options={{ headerShown: false }} />
+            <Stack.Screen name="select-native-language" options={{ headerShown: false }} />
+            <Stack.Screen name="lessons" options={{ headerShown: false }} />
+          </Stack>
         </View>
 
         <PortalHost />
