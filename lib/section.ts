@@ -28,7 +28,7 @@ const transformDataSection = (data: ITopic[]) => {
     lessonParts.push({
       id: `${topic.lessons[0].id}-start`,
       topicId: topic.id,
-      lessonId1: topic.lessons[0].id,
+      originLessonId: topic.lessons[0].id,
       marginLeft: marginLefts[0],
       icon: StartImg,
       popoverContent: 'Bắt đầu bài học',
@@ -38,7 +38,7 @@ const transformDataSection = (data: ITopic[]) => {
     lessonParts.push({
       id: `${topic.lessons[0].id}-new`,
       topicId: topic.id,
-      lessonId1: topic.lessons[1].id,
+      originLessonId: topic.lessons[1].id,
       marginLeft: marginLefts[1],
       icon: NewLessonImg,
       popoverContent: 'Học thêm từ mới',
@@ -48,17 +48,18 @@ const transformDataSection = (data: ITopic[]) => {
     lessonParts.push({
       id: `${topic.lessons[1].id}-practice`,
       topicId: topic.id,
-      lessonId1: topic.lessons[1].id,
-      addition: 'prev',
+      originLessonId: topic.lessons[1].id,
+      prevLessonId: topic.lessons[0].id,
       marginLeft: marginLefts[2],
       icon: PracticeImg,
       popoverContent: 'Luyện tập từ đã học',
       popoverDescription: 'Luyện tập từ mới đã học trong bài học này',
     })
+
     lessonParts.push({
       id: `${topic.lessons[2].id}-new`,
       topicId: topic.id,
-      lessonId1: topic.lessons[2].id,
+      originLessonId: topic.lessons[2].id,
       marginLeft: marginLefts[3],
       icon: NewLessonImg,
       popoverContent: 'Học từ mới tiếp theo',
@@ -68,27 +69,29 @@ const transformDataSection = (data: ITopic[]) => {
     lessonParts.push({
       id: `${topic.lessons[2].id}-practice`,
       topicId: topic.id,
-      lessonId1: topic.lessons[2].id,
-      addition: 'prev',
+      originLessonId: topic.lessons[2].id,
+      prevLessonId: topic.lessons[1].id,
       marginLeft: marginLefts[4],
       icon: PracticeImg,
       popoverContent: 'Luyện tập từ đã học',
       popoverDescription: 'Luyện tập từ mới đã học trong bài học này',
     })
+
     lessonParts.push({
       id: `${topic.lessons[3].id}-new`,
       topicId: topic.id,
-      lessonId1: topic.lessons[3].id,
+      originLessonId: topic.lessons[3].id,
       marginLeft: marginLefts[5],
       icon: NewLessonImg,
       popoverContent: 'Học thêm từ mới',
       popoverDescription: 'Tiếp tục học từ mới trong bài học này',
     })
+    
     lessonParts.push({
       id: `${topic.lessons[3].id}-practice`,
       topicId: topic.id,
-      lessonId1: topic.lessons[3].id,
-      addition: 'prev',
+      originLessonId: topic.lessons[3].id,
+      prevLessonId: topic.lessons[2].id,
       marginLeft: marginLefts[6],
       icon: PracticeImg,
       popoverContent: 'Luyện tập từ đã học',
@@ -97,8 +100,8 @@ const transformDataSection = (data: ITopic[]) => {
     lessonParts.push({
       id: `${topic.lessons[3].id}-final`,
       topicId: topic.id,
-      lessonId1: topic.lessons[3].id,
-      addition: 'all',
+      originLessonId: topic.lessons[3].id,
+      prevLessonId: 'all',
       marginLeft: marginLefts[7],
       icon: FinalImg,
       popoverContent: 'Ôn tập tất cả từ mới',

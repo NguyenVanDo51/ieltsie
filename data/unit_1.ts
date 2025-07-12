@@ -408,5 +408,105 @@ export const unit_1: ITopic = {
         },
       ],
     },
+    {
+      id: 'lesson_af_05_concepts',
+      words: [
+        {
+          id: 'word_corner',
+          en: 'corner',
+          vi: 'góc',
+          explanation: {
+            en: 'The place where two lines or surfaces meet at an angle.',
+            vi: 'Nơi mà hai đường thẳng hoặc bề mặt gặp nhau tạo thành một góc.',
+          },
+          examples: [
+            {
+              en: 'The cat is hiding in the corner of the room.',
+              vi: 'Con mèo đang trốn ở góc phòng.',
+            },
+            {
+              en: 'There is a coffee shop on the corner of the street.',
+              vi: 'Có một quán cà phê ở góc phố.',
+            },
+          ],
+        },
+        {
+          id: 'word_front',
+          en: 'front',
+          vi: 'phía trước',
+          explanation: {
+            en: 'The side or part of something that faces forward or is most often seen.',
+            vi: 'Phía hoặc phần của một vật hướng về phía trước hoặc được nhìn thấy nhiều nhất.',
+          },
+          examples: [
+            {
+              en: 'She sits in the front of the classroom.',
+              vi: 'Cô ấy ngồi ở phía trước lớp học.',
+            },
+            {
+              en: 'Please come to the front door.',
+              vi: 'Xin hãy đến cửa trước.',
+            },
+          ],
+        },
+        {
+          id: 'word_usually',
+          en: 'usually',
+          vi: 'thường xuyên',
+          explanation: {
+            en: 'In most cases; generally; most of the time.',
+            vi: 'Trong hầu hết các trường hợp; nói chung; phần lớn thời gian.',
+          },
+          examples: [
+            {
+              en: 'I usually wake up at 7 AM.',
+              vi: 'Tôi thường xuyên thức dậy lúc 7 giờ sáng.',
+            },
+            {
+              en: 'She usually drinks coffee in the morning.',
+              vi: 'Cô ấy thường xuyên uống cà phê vào buổi sáng.',
+            },
+          ],
+        },
+        {
+          id: 'word_kind',
+          en: 'kind',
+          vi: 'tử tế',
+          explanation: {
+            en: 'Having a friendly, generous nature.',
+            vi: 'Có tính cách thân thiện, hào phóng.',
+          },
+          examples: [
+            {
+              en: 'She is a very kind person.',
+              vi: 'Cô ấy là một người rất tử tế.',
+            },
+            {
+              en: 'We should be kind to others.',
+              vi: 'Chúng ta nên tử tế với người khác.',
+            },
+          ],
+        },
+        {
+          id: 'word_whole',
+          en: 'whole',
+          vi: 'toàn bộ',
+          explanation: {
+            en: 'Complete; entire; all of something.',
+            vi: 'Hoàn chỉnh; toàn bộ; tất cả của một cái gì đó.',
+          },
+          examples: [
+            {
+              en: 'He ate the whole pizza by himself.',
+              vi: 'Anh ấy đã ăn toàn bộ chiếc pizza một mình.',
+            },
+            {
+              en: 'We spent the whole day at the beach.',
+              vi: 'Chúng tôi đã dành toàn bộ ngày ở bãi biển.',
+            },
+          ],
+        },
+      ],
+    }
   ],
 }

@@ -18,7 +18,7 @@ import { getRandomCorrectMessage, getRandomQuizType, getRandomWrongMessage } fro
 import { TARGET_LANGUAGE, UI_LANGUAGE } from '~/lib/constants'
 
 const BrokenHeartImage = require('~/assets/lesson/broken-heart.png')
-// TODO: Use addition parameter to add more words
+// TODO: Use prevLessonId parameter to add more words
 // TODO: Thêm thông báo làm lại những từ chọn sai, ấn OK thì mới bắt đầu lại
 
 const LearnQuiz: FC<{

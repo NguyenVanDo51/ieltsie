@@ -1,10 +1,10 @@
 import { IScore } from "~/lib/storage"
 
 export type LessonProps = {
-  lessonId1: string
+  originLessonId: string
   icon?: any
   marginLeft?: number
-  addition?: 'prev' | 'all'
+  prevLessonId?: string | 'all'
   popoverContent?: string
   popoverDescription?: string
   scores: IScore

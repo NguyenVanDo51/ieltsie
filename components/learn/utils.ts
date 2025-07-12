@@ -2,13 +2,13 @@ import { LearnQuizType } from './type'
 import { getRandomInt } from '~/lib/utils'
 
 const types = [
-  // LearnQuizType.EN_CHOISE,
-  // LearnQuizType.EN_CHOISE,
-  // LearnQuizType.VI_CHOISE,
-  // LearnQuizType.VI_CHOISE,
-  // LearnQuizType.PICK_IN_EN_EXAMPLE,
-  // LearnQuizType.PICK_IN_EN_EXAMPLE,
-  // LearnQuizType.MATCHING,
+  LearnQuizType.EN_CHOISE,
+  LearnQuizType.EN_CHOISE,
+  LearnQuizType.VI_CHOISE,
+  LearnQuizType.VI_CHOISE,
+  LearnQuizType.PICK_IN_EN_EXAMPLE,
+  LearnQuizType.PICK_IN_EN_EXAMPLE,
+  LearnQuizType.MATCHING,
   LearnQuizType.SELECT_WORD_FROM_EXPLANATION,
   LearnQuizType.SELECT_WORD_FROM_EXPLANATION,
 ]

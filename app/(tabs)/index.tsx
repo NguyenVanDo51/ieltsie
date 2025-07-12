@@ -16,8 +16,18 @@ export default function HomePage() {
   const router = useRouter()
 
   const lastLessonIndex = useMemo(() => {
-    return DATA_ALL_LESSON.findIndex((t) => !scores[t.id]) || -1
+    if (!scores || Object.keys(scores).length === 0) {
+      return -1 // No lessons completed
+    }
+
+    if (scores[DATA_ALL_LESSON.at(-1)?.id] > 0) {
+      return DATA_ALL_LESSON.length - 1
+    }
+
+    return DATA_ALL_LESSON.findIndex((t) => !scores[t.id])
   }, [scores])
+
+  console.log('lastLessonIndex',scores,  lastLessonIndex)
 
   const renderLessonItem = ({ item, index }: {item: LessonPart, index: number}) => {
     const isCompleted = !!scores[item.id]
@@ -33,7 +43,7 @@ export default function HomePage() {
           params: {
             lessonId: item.id,
             topicId: item.topicId,
-            addition: item.addition || '',
+            prevLessonId: item.prevLessonId || '',
           },
         })
       }

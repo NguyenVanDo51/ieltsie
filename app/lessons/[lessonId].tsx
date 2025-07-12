@@ -13,7 +13,7 @@ import { Button } from '~/components/ui/button'
 import ViewWithFixedButton from '~/components/views/ViewWithFixedButton'
 
 const LearnPage: FC = () => {
-  const { lessonId, topicId, addition } = useLocalSearchParams()
+  const { lessonId, topicId, prevLessonId } = useLocalSearchParams()
 
   const [isDoWrongWords, setIsDoWrongWords] = useState(false)
   const [isCompleted, setIsCompleted] = useState(false)
@@ -23,17 +23,21 @@ const LearnPage: FC = () => {
     return IT_VOCAB_LESSONS.find((t) => t.id === topicId)
   }, [topicId])
 
-  const lessonIndex = useMemo(() => {
-    return DATA_ALL_LESSON.findIndex((l) => l.id === lessonId)
+  const originLessonId = useMemo(() => {
+    return DATA_ALL_LESSON.find((l) => l.id === lessonId)?.originLessonId
   }, [lessonId])
 
   const lesson = useMemo(() => {
-    return topic.lessons[lessonIndex]
-  }, [topicId, lessonId, lessonIndex])
+    return topic.lessons.find((l) => l.id === originLessonId)
+  }, [topicId, lessonId, originLessonId])
+
+  if (!lesson) {
+    return null
+  }
 
   const [currentWords, setCurrentWords] = useState<ILesson['words']>([])
   const [isShowWrongNotification, setIsShowWrongNotification] = useState(false)
-  console.log('isShowWrongNotification', isShowWrongNotification)
+
   const handleWrongWords = (wrongWords?: ILesson['words']) => {
     if (wrongWords.length < 1) {
       setIsCompleted(true)
@@ -49,29 +53,35 @@ const LearnPage: FC = () => {
     if (currentWords.length === 0) {
       const words = []
 
-      if (!addition) {
+      if (!prevLessonId) {
         words.push(...lesson.words)
       }
 
-      if (addition === 'prev') {
-        const prevLesson = topic.lessons[lessonIndex - 1]
-        if (prevLesson) {
-          words.push(...prevLesson.words)
-        }
-      }
-      if (addition === 'all') {
+      if (prevLessonId === 'all') {
         topic.lessons.forEach((l) => {
           words.push(...l.words)
         })
+      } else {
+        const prevLesson = topic.lessons.find((l) => l.id === prevLessonId)
+        if (prevLesson) {
+          words.push(...prevLesson.words)
+        }
       }
 
       setCurrentWords(words)
     }
   }, [])
 
+  if (!lesson) {
+    return null
+  }
+
   if (isShowWrongNotification) {
     return (
-      <ViewWithFixedButton className="items-center justify-center" onButtonPress={() => setIsShowWrongNotification(false)}>
+      <ViewWithFixedButton
+        className="items-center justify-center"
+        onButtonPress={() => setIsShowWrongNotification(false)}
+      >
         <Text className="text-2xl font-semibold text-gray-800 mb-4">
           Cùng làm lại những từ chưa đúng nhé!
         </Text>

@@ -11,7 +11,7 @@
 ## Tính năng quiz
 
 - [x] Cố định số lượng từ trong mỗi bài tập
-- [x] Thêm dạng addition="prev" và "all"
+- [x] Thêm dạng prevLessonId="prev" và "all"
 - [x] Tự động làm lại các câu sai
 - [ ] Dạng quiz: nghe và chọn từ đúng
 - [ ] Dạng quiz: nghe và dịch câu (chọn từ có sẵn)
