@@ -1,9 +1,5 @@
 export type IText = {
   en: string // English text
-  fr: string // French translation
-  es: string // Spanish translation
-  de: string // German translation
-  cn: string // Chinese translation
   vi: string // Vietnamese translation
 }
 

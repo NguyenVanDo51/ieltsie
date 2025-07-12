@@ -27,43 +27,6 @@ export const IS_ANDROID = Platform.OS === 'android'
 export const IS_IOS = Platform.OS === 'ios'
 export const IS_WEB = Platform.OS === 'web'
 
-const enFlag = require('~/assets/flags/en.png')
-const frFlag = require('~/assets/flags/fr.png')
-const esFlag = require('~/assets/flags/es.png')
-const deFlag = require('~/assets/flags/de.png')
-const cnFlag = require('~/assets/flags/cn.png')
-const viFlag = require('~/assets/flags/vi.png')
-
-export const LANGUAGES = [
-  {
-    code: 'en',
-    name: 'English',
-    image: enFlag,
-  },
-  {
-    code: 'fr',
-    name: 'Français',
-    image: frFlag,
-  },
-  {
-    code: 'es',
-    name: 'Español',
-    image: esFlag,
-  },
-  {
-    code: 'de',
-    name: 'Deutsch',
-    image: deFlag,
-  },
-  {
-    code: 'cn',
-    name: '中文',
-    image: cnFlag,
-  },
-  {
-    code: 'vi',
-    name: 'Tiếng Việt',
-    image: viFlag,
-  },
-
-]
+// Fixed languages: English as target, Vietnamese as UI
+export const TARGET_LANGUAGE = 'en'
+export const UI_LANGUAGE = 'vi'
