@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ImageStyle } from 'react-native'
 import { useMemo } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Redirect, useRouter } from 'expo-router'
@@ -17,10 +17,11 @@ export default function HomePage() {
   const lastLessonIndex = useMemo(() => {
     return DATA_ALL_LESSON.findIndex((t) => !scores[t.id]) || -1
   }, [scores])
+  console.log('Last Lesson Index:', lastLessonIndex)
 
   const renderLessonItem = ({ item, index }) => {
     const isCompleted = !!scores[item.id]
-    const isDisabled = index > lastLessonIndex + 1
+    const isDisabled = index > lastLessonIndex
     const isActive = index === lastLessonIndex + 1
     const score = scores[item.id] || 0
     const progress = Math.min((score / 3) * 100, 100)
@@ -43,7 +44,6 @@ export default function HomePage() {
         style={[
           styles.lessonCard,
           isDisabled && styles.disabledCard,
-          isActive && styles.activeCard,
         ]}
         onPress={handlePress}
         disabled={isDisabled}
@@ -52,12 +52,10 @@ export default function HomePage() {
         <LinearGradient
           colors={
             isCompleted 
-              ? ['#22c55e', '#16a34a'] 
-              : isActive 
-                ? ['#3b82f6', '#1d4ed8']
+              ? designTokens.gradients.success 
                 : isDisabled
-                  ? ['#f3f4f6', '#e5e7eb']
-                  : ['#ffffff', '#f8fafc']
+                  ? [designTokens.bg.disabled, designTokens.bg.disabled]
+                  : [designTokens.colors.white, designTokens.colors.white]
           }
           style={styles.cardGradient}
           start={{ x: 0, y: 0 }}
@@ -77,7 +75,7 @@ export default function HomePage() {
               ) : (
                 <Image 
                   source={item.icon} 
-                  style={styles.lessonIcon}
+                  style={styles.lessonIcon as ImageStyle}
                   contentFit="cover"
                 />
               )}
@@ -115,12 +113,6 @@ export default function HomePage() {
                       ]} 
                     />
                   </View>
-                  <Text style={[
-                    styles.progressText,
-                    isCompleted && styles.completedText,
-                  ]}>
-                    {Math.round(progress)}%
-                  </Text>
                 </View>
               )}
             </View>
@@ -161,14 +153,6 @@ export default function HomePage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient
-        colors={['#667eea', '#764ba2']}
-        style={styles.header}
-      >
-        <Text style={styles.headerTitle}>Học từ vựng</Text>
-        <Text style={styles.headerSubtitle}>Tiếp tục hành trình học tập của bạn</Text>
-      </LinearGradient>
-
       <FlatList
         data={DATA_FLAT_LIST}
         keyExtractor={(item) => item.title.en}

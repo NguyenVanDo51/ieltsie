@@ -80,7 +80,7 @@ export const designTokens = {
     primaryReverse: ['#764ba2', '#667eea'],
     accent: ['#4facfe', '#00f2fe'],
     accentReverse: ['#00f2fe', '#4facfe'],
-    success: ['#56ab2f', '#a8e6cf'],
+    success: ['#22c55e', '#16a34a'] as const,
     warning: ['#f093fb', '#f5576c'],
     sunset: ['#ff9a9e', '#fecfef'],
     ocean: ['#667eea', '#764ba2'],
@@ -120,11 +120,11 @@ export const designTokens = {
       '6xl': 48,
     },
     fontWeight: {
-      normal: '400',
-      medium: '500',
-      semibold: '600',
-      bold: '700',
-      extrabold: '800',
+      normal: '400' as const,
+      medium: '500' as const,
+      semibold: '600' as const,
+      bold: '700' as const,
+      extrabold: '800' as const,
     },
     lineHeight: {
       tight: 1.2,
@@ -174,6 +174,9 @@ export const designTokens = {
       easeIn: 'ease-in',
     },
   },
+  bg: {
+    disabled: "#f3f4f6",
+  }
 }
 
 export type DesignTokens = typeof designTokens
