@@ -7,23 +7,16 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { Play, Lock, CircleCheck as CheckCircle, Star } from 'lucide-react-native'
 import { DATA_ALL_LESSON, DATA_FLAT_LIST } from '~/lib/section'
 import { useScores } from '~/store/useScore'
-import { usetargetLanguage } from '~/store/useTargetLanguage'
-import { useNativeLanguage } from '~/store/useNativeLanguage'
+import { UI_LANGUAGE } from '~/lib/constants'
 import { designTokens } from '~/components/design-system'
 
 export default function HomePage() {
   const scores = useScores((t) => t.scores)
   const router = useRouter()
-  const targetLanguage = usetargetLanguage(t => t.targetLanguage)
-  const nativeLang = useNativeLanguage(t => t.nativeLanguage)
 
   const lastLessonIndex = useMemo(() => {
     return DATA_ALL_LESSON.findIndex((t) => !scores[t.id]) || -1
   }, [scores])
-
-  if (!targetLanguage) {
-    return <Redirect href="/select-language" />
-  }
 
   const renderLessonItem = ({ item, index }) => {
     const isCompleted = !!scores[item.id]
@@ -161,7 +154,7 @@ export default function HomePage() {
   const renderSectionHeader = ({ section }) => (
     <View style={styles.sectionHeader}>
       <View style={styles.sectionLine} />
-      <Text style={styles.sectionTitle}>{section.title[nativeLang]}</Text>
+      <Text style={styles.sectionTitle}>{section.title[UI_LANGUAGE]}</Text>
       <View style={styles.sectionLine} />
     </View>
   )

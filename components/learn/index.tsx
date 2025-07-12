@@ -15,8 +15,7 @@ import { TOTAL_QUIZ_PER_LESSON } from '~/lib/constants'
 import { Progress } from '../ui/progress'
 import { LearnQuizType } from './type'
 import { getRandomQuizType } from './utils'
-import { usetargetLanguage } from '~/store/useTargetLanguage'
-import { useNativeLanguage } from '~/store/useNativeLanguage'
+import { TARGET_LANGUAGE, UI_LANGUAGE } from '~/lib/constants'
 
 const BrokenHeartImage = require('~/assets/lesson/broken-heart.png')
 
@@ -28,8 +27,6 @@ const LearnQuiz: FC<{
   handleWrongWords: (wrongWords?: ILesson['words']) => void
 }> = ({ words, topic, lesson, isDoWrongWords, handleWrongWords }) => {
   const totalQuestions = isDoWrongWords ? words.length : TOTAL_QUIZ_PER_LESSON
-  const targetLang = usetargetLanguage(t => t.targetLanguage)
-  const nativeLang = useNativeLanguage(t => t.nativeLanguage)
 
   const router = useRouter()
   const insets = useSafeAreaInsets()
@@ -68,13 +65,13 @@ const LearnQuiz: FC<{
 
   switch (type) {
     case LearnQuizType.EN_TO_VI:
-      return currentWord[nativeLang]
+      return currentWord[UI_LANGUAGE]
     case LearnQuizType.EN_TO_IMAGE:
       return currentWord.img
     case LearnQuizType.VI_TO_EN:
-      return currentWord[targetLang]
+      return currentWord[TARGET_LANGUAGE]
     case LearnQuizType.PICK_IN_EN_EXAMPLE:
-      return currentWord[targetLang]
+      return currentWord[TARGET_LANGUAGE]
     default:
       return ''
   }
@@ -85,20 +82,20 @@ const LearnQuiz: FC<{
 
   switch (type) {
     case LearnQuizType.EN_TO_VI:
-      return currentWord[targetLang]
+      return currentWord[TARGET_LANGUAGE]
     case LearnQuizType.EN_TO_IMAGE:
-      return currentWord[targetLang]
+      return currentWord[TARGET_LANGUAGE]
     case LearnQuizType.VI_TO_EN:
-      return currentWord[nativeLang]
+      return currentWord[UI_LANGUAGE]
     // TODO: Write unit tests for this
     case LearnQuizType.PICK_IN_EN_EXAMPLE:
-      return currentWord.example[getRandomInt(0, currentWord.example.length - 1)][targetLang]
+      return currentWord.example[getRandomInt(0, currentWord.example.length - 1)][TARGET_LANGUAGE]
         .toLowerCase()
-        .replace(currentWord[targetLang].toLowerCase(), '________')
+        .replace(currentWord[TARGET_LANGUAGE].toLowerCase(), '________')
     default:
       return ''
   }
-  }, [currentWord, type, nativeLang, targetLang])
+  }, [currentWord, type])
 
   const options = useMemo(
     () => {
@@ -106,7 +103,7 @@ const LearnQuiz: FC<{
       
         switch (type) {
           case LearnQuizType.EN_TO_VI:
-            return getRandomOptions(allWords, currentWord, nativeLang as 'en' | 'vi')
+            return getRandomOptions(allWords, currentWord, UI_LANGUAGE as 'en' | 'vi')
           case LearnQuizType.EN_TO_IMAGE:
             return getRandomOptions(allWords, currentWord, 'img').map((imgUri) => ({
               text: imgUri,
@@ -190,7 +187,7 @@ const LearnQuiz: FC<{
       case LearnQuizType.EN_TO_VI:
         return (
           <SelectOne
-            question={currentWord[targetLang]}
+            question={currentWord[TARGET_LANGUAGE]}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -200,7 +197,7 @@ const LearnQuiz: FC<{
       case LearnQuizType.EN_TO_IMAGE:
         return (
           <SelectOne
-            question={currentWord[targetLang]}
+            question={currentWord[TARGET_LANGUAGE]}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -210,7 +207,7 @@ const LearnQuiz: FC<{
       case LearnQuizType.VI_TO_EN:
         return (
           <SelectOne
-            question={currentWord[nativeLang]}
+            question={currentWord[UI_LANGUAGE]}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -273,8 +270,8 @@ const LearnQuiz: FC<{
 
         {currentWord?.explanation && type !== LearnQuizType.MATCHING && (
           <View className="flex flex-col gap-2 px-4">
-            <Text>{currentWord.explanation[targetLang]}</Text>
-            <Text>{currentWord.explanation[nativeLang]}</Text>
+            <Text>{currentWord.explanation[TARGET_LANGUAGE]}</Text>
+            <Text>{currentWord.explanation[UI_LANGUAGE]}</Text>
           </View>
         )}
 

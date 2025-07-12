@@ -4,44 +4,24 @@ import { useRouter } from 'expo-router'
 import { Typography, Card, GradientBackground, Button } from '~/components/design-system'
 import { designTokens } from '~/components/design-system'
 import { useScores } from '~/store/useScore'
-import { usetargetLanguage } from '~/store/useTargetLanguage'
-import { useNativeLanguage } from '~/store/useNativeLanguage'
-import { LANGUAGES } from '~/lib/constants'
+import { TARGET_LANGUAGE, UI_LANGUAGE } from '~/lib/constants'
 import { User, Globe, Settings, CircleHelp as HelpCircle, LogOut, ChevronRight } from 'lucide-react-native'
 import { Image } from 'expo-image'
 
 export default function ProfileScreen() {
   const router = useRouter()
   const scores = useScores((t) => t.scores)
-  const { targetLanguage, setTargetLanguage } = usetargetLanguage()
-  const { nativeLanguage, set: setNativeLanguage } = useNativeLanguage()
   
   const totalLessonsCompleted = Object.keys(scores).length
   const totalScore = Object.values(scores).reduce((sum, score) => sum + score, 0)
   
-  const targetLang = LANGUAGES.find(lang => lang.code === targetLanguage)
-  const nativeLang = LANGUAGES.find(lang => lang.code === nativeLanguage)
-
   const menuItems = [
     {
-      id: 'target-language',
-      title: 'Ngôn ngữ học',
-      subtitle: targetLang?.name || 'Chưa chọn',
+      id: 'app-info',
+      title: 'Thông tin ứng dụng',
+      subtitle: 'Học tiếng Anh với giao diện tiếng Việt',
       icon: Globe,
-      onPress: () => router.push('/select-language'),
-      rightElement: targetLang && (
-        <Image source={targetLang.image} style={styles.flagIcon} contentFit="cover" />
-      ),
-    },
-    {
-      id: 'native-language',
-      title: 'Ngôn ngữ hiển thị',
-      subtitle: nativeLang?.name || 'Chưa chọn',
-      icon: Settings,
-      onPress: () => router.push('/select-native-language'),
-      rightElement: nativeLang && (
-        <Image source={nativeLang.image} style={styles.flagIcon} contentFit="cover" />
-      ),
+      onPress: () => Alert.alert('Thông tin', 'Ứng dụng học tiếng Anh với giao diện tiếng Việt'),
     },
     {
       id: 'help',
@@ -133,7 +113,6 @@ export default function ProfileScreen() {
                     </View>
                     
                     <View style={styles.menuRight}>
-                      {item.rightElement}
                       <ChevronRight 
                         size={20} 
                         color={designTokens.colors.neutral[400]}
@@ -259,12 +238,6 @@ const styles = StyleSheet.create({
   menuRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: designTokens.spacing.sm,
-  },
-  flagIcon: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
   },
   dangerZone: {
     marginTop: designTokens.spacing['3xl'],

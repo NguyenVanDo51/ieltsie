@@ -12,11 +12,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-reanimated'
 import { PopoverProvider } from '~/components/ui/popover'
-import { usetargetLanguage } from '~/store/useTargetLanguage'
-import { Indicator } from '@rn-primitives/progress'
-import { useNativeLanguage } from '~/store/useNativeLanguage'
 import { useScores } from '~/store/useScore'
 import { useFrameworkReady } from '~/hooks/useFrameworkReady'
+import { useFrameworkReady } from '@/hooks/useFrameworkReady'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
@@ -39,8 +37,6 @@ export default function RootLayout() {
   const hasMounted = React.useRef(false)
   const { isDarkColorScheme } = useColorScheme()
   const [isLoading, setIsLoading] = React.useState(false)
-  const fetch = usetargetLanguage((t) => t.fetch)
-  const fetchNativeLang = useNativeLanguage((t) => t.fetch)
   const fetchScores = useScores((t) => t.fetchScores)
 
   useIsomorphicLayoutEffect(() => {
@@ -52,8 +48,6 @@ export default function RootLayout() {
     if (Platform.OS === 'web') {
       document.documentElement.classList.add('bg-background')
     }
-    fetch()
-    fetchNativeLang()
     fetchScores()
     
     setTimeout(() => {
@@ -80,8 +74,6 @@ export default function RootLayout() {
         <View style={{ flex: 1, marginTop: insets.top }}>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="select-language" options={{ headerShown: false }} />
-            <Stack.Screen name="select-native-language" options={{ headerShown: false }} />
             <Stack.Screen name="lessons" options={{ headerShown: false }} />
           </Stack>
         </View>
