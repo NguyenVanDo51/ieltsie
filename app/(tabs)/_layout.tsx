@@ -25,24 +25,6 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="lessons"
-        options={{
-          title: 'Bài học',
-          tabBarIcon: ({ color, size }) => (
-            <BookOpen size={size} color={color} strokeWidth={2} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="achievements"
-        options={{
-          title: 'Thành tích',
-          tabBarIcon: ({ color, size }) => (
-            <Trophy size={size} color={color} strokeWidth={2} />
-          ),
-        }}
-      />
-      <Tabs.Screen
         name="profile"
         options={{
           title: 'Cá nhân',
