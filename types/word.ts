@@ -5,8 +5,7 @@ export type IText = {
 
 export type IWord = IText & {
   id: string
-  example: IText[] // 2 examples, contain exactly the vocabulary word
-  img: string
+  examples: IText[] // 2 examples, contain exactly the vocabulary word
   explanation: IText // short and simple explanation of the word
 }
 

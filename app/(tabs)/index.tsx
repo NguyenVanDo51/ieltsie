@@ -9,6 +9,7 @@ import { DATA_ALL_LESSON, DATA_FLAT_LIST } from '~/lib/section'
 import { useScores } from '~/store/useScore'
 import { UI_LANGUAGE } from '~/lib/constants'
 import { designTokens } from '~/components/design-system'
+import { LessonPart } from '~/types/lesson'
 
 export default function HomePage() {
   const scores = useScores((t) => t.scores)
@@ -17,9 +18,8 @@ export default function HomePage() {
   const lastLessonIndex = useMemo(() => {
     return DATA_ALL_LESSON.findIndex((t) => !scores[t.id]) || -1
   }, [scores])
-  console.log('Last Lesson Index:', lastLessonIndex)
 
-  const renderLessonItem = ({ item, index }) => {
+  const renderLessonItem = ({ item, index }: {item: LessonPart, index: number}) => {
     const isCompleted = !!scores[item.id]
     const isDisabled = index > lastLessonIndex
     const isActive = index === lastLessonIndex + 1
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: designTokens.spacing.xl,
-    paddingBottom: designTokens.spacing['6xl'],
+    paddingBottom: designTokens.spacing['xl'],
   },
   section: {
     marginBottom: designTokens.spacing['2xl'],

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router'
 import { StyleSheet } from 'react-native'
-import { Chrome as Home, BookOpen, Trophy, User } from 'lucide-react-native'
+import { BookOpen, Trophy, User } from 'lucide-react-native'
 import { designTokens } from '~/components/design-system'
 
 export default function TabLayout() {
@@ -18,16 +18,16 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Học',
+          title: '',
           tabBarIcon: ({ color, size }) => (
-            <Home size={size} color={color} strokeWidth={2} />
+            <BookOpen size={size} color={color} strokeWidth={2} />
           ),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Cá nhân',
+          title: '',
           tabBarIcon: ({ color, size }) => (
             <User size={size} color={color} strokeWidth={2} />
           ),
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     borderTopColor: designTokens.colors.neutral[200],
     paddingTop: designTokens.spacing.sm,
     paddingBottom: designTokens.spacing.md,
-    height: 80,
+    height: 60,
     ...designTokens.shadows.lg,
   },
   tabBarLabel: {

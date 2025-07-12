@@ -1,7 +1,7 @@
-import { LessonProps } from '~/components/map/Lesson'
 import { ITopic } from '~/types/word'
 import { IScore } from './storage'
 import { IT_VOCAB_LESSONS } from '~/data/vocab'
+import { LessonPart } from '~/types/lesson'
 
 const StartImg = require('~/assets/lesson/start.gif')
 const NewLessonImg = require('~/assets/lesson/new.gif')
@@ -23,9 +23,7 @@ const marginLefts = [
 
 const transformDataSection = (data: ITopic[]) => {
   const sectionTemp = data.map((topic) => {
-    const lessonParts: (Omit<LessonProps, 'onStart' | 'lastLessonId' | 'scores'> & {
-      id: string
-    })[] = []
+    const lessonParts: LessonPart[] = []
 
     lessonParts.push({
       id: `${topic.lessons[0].id}-start`,

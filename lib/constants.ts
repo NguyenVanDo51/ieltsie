@@ -19,7 +19,7 @@ export const NAV_THEME = {
   },
 };
 
-export const TOTAL_QUIZ_PER_LESSON = 5;
+export const TOTAL_QUIZ_PER_LESSON = 2;
 export const APP_NAME = "Ieltsie";
 export const APP_VERSION = "1.0.0";
 

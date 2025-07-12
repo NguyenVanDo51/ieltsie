@@ -1,5 +1,5 @@
-import React, { useEffect, useState, ReactElement, useCallback } from 'react'
-import { View, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useEffect, useState, ReactElement, useCallback, JSX } from 'react'
+import { View, Pressable } from 'react-native'
 import { cn } from '~/lib/utils'
 import { Text } from '../ui/text'
 
@@ -9,7 +9,7 @@ type OptionType = {
 }
 
 type Props = {
-  question: string
+  question: JSX.Element | string
   options: (OptionType | string)[]
   optionContainerClassName?: string
   correctAnswer: string
@@ -51,8 +51,7 @@ export const SelectOne: React.FC<Props> = ({
   const getOptionClassName = useCallback(
     (option: OptionType | string): string => {
       const optionText = typeof option === 'string' ? option : option.text
-      const baseClass =
-        'text-center items-center w-full p-4 rounded-lg text-base border'
+      const baseClass = 'text-center items-center w-full p-4 rounded-lg text-base border'
 
       if (!isAnswered) {
         return `${baseClass} bg-white border-gray-300 text-red-500`
@@ -81,25 +80,24 @@ export const SelectOne: React.FC<Props> = ({
 
   return (
     <View className="w-full">
-      <View className="mb-6">
-        <Text
-          className="text-2xl font-semibold text-gray-800 mb-4"
-          style={{ textTransform: 'capitalize' }}
-        >
-          {question}
-        </Text>
+      <View className="mb-10">
+        {typeof question === 'string' ? (
+          <Text className="text-2xl font-semibold text-gray-800 ">{question}</Text>
+        ) : (
+          question
+        )}
       </View>
 
       <View className={`flex flex-col gap-4 ${optionContainerClassName}`}>
         {options.map((option, index) => (
-          <TouchableOpacity
+          <Pressable
             key={index}
             disabled={isAnswered}
             onPressIn={() => handleOptionClick(option)}
             className={getOptionClassName(option)}
           >
             {getOptionElement(option)}
-          </TouchableOpacity>
+          </Pressable>
         ))}
       </View>
     </View>

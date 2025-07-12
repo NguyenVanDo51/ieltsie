@@ -14,18 +14,19 @@ import { playCorrectAudio, playIncorrectAudio } from '~/lib/audio'
 import { TOTAL_QUIZ_PER_LESSON } from '~/lib/constants'
 import { Progress } from '../ui/progress'
 import { LearnQuizType } from './type'
-import { getRandomQuizType } from './utils'
+import { getRandomCorrectMessage, getRandomQuizType, getRandomWrongMessage } from './utils'
 import { TARGET_LANGUAGE, UI_LANGUAGE } from '~/lib/constants'
 
 const BrokenHeartImage = require('~/assets/lesson/broken-heart.png')
+// TODO: Use addition parameter to add more words
+// TODO: Thêm thông báo làm lại những từ chọn sai, ấn OK thì mới bắt đầu lại
 
 const LearnQuiz: FC<{
   words: ILesson['words']
   topic: ITopic
-  lesson: ILesson
   isDoWrongWords: boolean
   handleWrongWords: (wrongWords?: ILesson['words']) => void
-}> = ({ words, topic, lesson, isDoWrongWords, handleWrongWords }) => {
+}> = ({ words, topic, isDoWrongWords, handleWrongWords }) => {
   const totalQuestions = isDoWrongWords ? words.length : TOTAL_QUIZ_PER_LESSON
 
   const router = useRouter()
@@ -48,82 +49,76 @@ const LearnQuiz: FC<{
   const currentWord = words[currentIndex]
 
   const getRandomOptions = (
-  allWords: IWord[],
-  currentWord: IWord,
-  field: keyof Pick<IWord, 'en' | 'vi' | 'img'>,
-  count: number = getRandomInt(2, 3)
-): string[] => {
-  const otherWords = allWords.filter((w) => w.id !== currentWord.id)
-  const shuffled = [...otherWords].sort(() => Math.random() - 0.5)
-  return [currentWord[field], ...shuffled.slice(0, count).map((w) => w[field])].sort(
-    () => Math.random() - 0.5
-  )
-}
+    allWords: IWord[],
+    currentWord: IWord,
+    field: keyof Pick<IWord, 'en' | 'vi'>,
+    count: number = getRandomInt(2, 3)
+  ): string[] => {
+    const otherWords = allWords.filter((w) => w.id !== currentWord.id)
+    const shuffled = [...otherWords].sort(() => Math.random() - 0.5)
+    return [currentWord[field], ...shuffled.slice(0, count).map((w) => w[field])].sort(
+      () => Math.random() - 0.5
+    )
+  }
 
   const correctAnswer = useMemo(() => {
     if (!currentWord) return ''
 
-  switch (type) {
-    case LearnQuizType.EN_TO_VI:
-      return currentWord[UI_LANGUAGE]
-    case LearnQuizType.EN_TO_IMAGE:
-      return currentWord.img
-    case LearnQuizType.VI_TO_EN:
-      return currentWord[TARGET_LANGUAGE]
-    case LearnQuizType.PICK_IN_EN_EXAMPLE:
-      return currentWord[TARGET_LANGUAGE]
-    default:
-      return ''
-  }
+    switch (type) {
+      case LearnQuizType.EN_CHOISE:
+        return currentWord[UI_LANGUAGE]
+      case LearnQuizType.VI_CHOISE:
+        return currentWord[TARGET_LANGUAGE]
+      case LearnQuizType.PICK_IN_EN_EXAMPLE:
+        return currentWord[TARGET_LANGUAGE]
+      case LearnQuizType.SELECT_WORD_FROM_EXPLANATION:
+        return currentWord[TARGET_LANGUAGE]
+      default:
+        return ''
+    }
   }, [currentWord, type])
 
   const question = useMemo(() => {
     if (!currentWord) return ''
 
-  switch (type) {
-    case LearnQuizType.EN_TO_VI:
-      return currentWord[TARGET_LANGUAGE]
-    case LearnQuizType.EN_TO_IMAGE:
-      return currentWord[TARGET_LANGUAGE]
-    case LearnQuizType.VI_TO_EN:
-      return currentWord[UI_LANGUAGE]
-    // TODO: Write unit tests for this
-    case LearnQuizType.PICK_IN_EN_EXAMPLE:
-      return currentWord.example[getRandomInt(0, currentWord.example.length - 1)][TARGET_LANGUAGE]
-        .toLowerCase()
-        .replace(currentWord[TARGET_LANGUAGE].toLowerCase(), '________')
-    default:
-      return ''
-  }
+    switch (type) {
+      case LearnQuizType.EN_CHOISE:
+        return currentWord[TARGET_LANGUAGE]
+      case LearnQuizType.VI_CHOISE:
+        return currentWord[UI_LANGUAGE]
+      // TODO: Write unit tests for this
+      case LearnQuizType.PICK_IN_EN_EXAMPLE:
+        return currentWord.examples[getRandomInt(0, currentWord.examples.length - 1)][
+          TARGET_LANGUAGE
+        ].toLowerCase().replace(currentWord[TARGET_LANGUAGE].toLowerCase(), '________')
+      case LearnQuizType.SELECT_WORD_FROM_EXPLANATION:
+        return (
+          <View>
+            <Text className="text-lg text-gray-500 mb-2">Chọn từ đúng với định nghĩa:</Text>
+            <Text className="text-xl">{currentWord.explanation[TARGET_LANGUAGE]}</Text>
+            <Text className="text-lg">({currentWord.explanation[UI_LANGUAGE]})</Text>
+          </View>
+        )
+      default:
+        return ''
+    }
   }, [currentWord, type])
 
-  const options = useMemo(
-    () => {
-        if (!currentWord) return []
-      
-        switch (type) {
-          case LearnQuizType.EN_TO_VI:
-            return getRandomOptions(allWords, currentWord, UI_LANGUAGE as 'en' | 'vi')
-          case LearnQuizType.EN_TO_IMAGE:
-            return getRandomOptions(allWords, currentWord, 'img').map((imgUri) => ({
-              text: imgUri,
-              render: (text: string) => (
-                <Image
-                  source={{ uri: text }} // Use { uri: text } for network images
-                  alt={imgUri} // alt is not directly used in RN Image
-                  className="w-24 h-24 object-cover mx-auto"
-                />
-              ),
-            }))
-          case LearnQuizType.VI_TO_EN:
-          case LearnQuizType.PICK_IN_EN_EXAMPLE:
-            return getRandomOptions(allWords, currentWord, 'en')
-          default:
-            return []
-        }
-    },
-    [currentWord, type, allWords]
-  )
+  const options = useMemo(() => {
+    if (!currentWord) return []
+
+    switch (type) {
+      case LearnQuizType.EN_CHOISE:
+        return getRandomOptions(allWords, currentWord, UI_LANGUAGE as 'en' | 'vi')
+      case LearnQuizType.VI_CHOISE:
+      case LearnQuizType.PICK_IN_EN_EXAMPLE:
+        return getRandomOptions(allWords, currentWord, 'en')
+      case LearnQuizType.SELECT_WORD_FROM_EXPLANATION:
+        return getRandomOptions(allWords, currentWord, 'en', 3)
+      default:
+        return []
+    }
+  }, [currentWord, type, allWords])
 
   const wordMatching = useMemo(() => {
     if (!currentWord) return []
@@ -165,15 +160,14 @@ const LearnQuiz: FC<{
     setResult(null)
   }
 
-  // cập nhật last lesson khi hoàn thành
   useEffect(() => {
     if (score >= totalQuestions) {
       handleWrongWords(wrongWords)
     }
-  }, [score, wrongWords])
+  })
 
   useEffect(() => {
-    setCurrentIndex(0)
+    setCurrentIndex(getRandomInt(0, words.length - 1))
     setScore(0)
     setResult(null)
     setType(getRandomQuizType())
@@ -184,30 +178,20 @@ const LearnQuiz: FC<{
     if (!currentWord) return null
 
     switch (type) {
-      case LearnQuizType.EN_TO_VI:
+      case LearnQuizType.EN_CHOISE:
         return (
           <SelectOne
-            question={currentWord[TARGET_LANGUAGE]}
+            question={question}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
             onIncorrect={handleIncorrect}
           />
         )
-      case LearnQuizType.EN_TO_IMAGE:
+      case LearnQuizType.VI_CHOISE:
         return (
           <SelectOne
-            question={currentWord[TARGET_LANGUAGE]}
-            options={options}
-            correctAnswer={correctAnswer}
-            onCorrect={handleCorrect}
-            onIncorrect={handleIncorrect}
-          />
-        )
-      case LearnQuizType.VI_TO_EN:
-        return (
-          <SelectOne
-            question={currentWord[UI_LANGUAGE]}
+            question={question}
             options={options}
             correctAnswer={correctAnswer}
             onCorrect={handleCorrect}
@@ -215,6 +199,16 @@ const LearnQuiz: FC<{
           />
         )
       case LearnQuizType.PICK_IN_EN_EXAMPLE:
+        return (
+          <SelectOne
+            question={question}
+            options={options}
+            correctAnswer={correctAnswer}
+            onCorrect={handleCorrect}
+            onIncorrect={handleIncorrect}
+          />
+        )
+      case LearnQuizType.SELECT_WORD_FROM_EXPLANATION:
         return (
           <SelectOne
             question={question}
@@ -250,7 +244,10 @@ const LearnQuiz: FC<{
                 <X />
               </Pressable>
 
-              <Progress value={(score / totalQuestions) * 100} indicatorClassName="bg-primary" />
+              <Progress
+                value={Math.max((score / (totalQuestions + 1)) * 100, 5)}
+                indicatorClassName="bg-primary"
+              />
             </View>
 
             {isDoWrongWords && (
@@ -268,12 +265,14 @@ const LearnQuiz: FC<{
 
         <View className="px-4">{renderContent()}</View>
 
-        {currentWord?.explanation && type !== LearnQuizType.MATCHING && (
-          <View className="flex flex-col gap-2 px-4">
-            <Text>{currentWord.explanation[TARGET_LANGUAGE]}</Text>
-            <Text>{currentWord.explanation[UI_LANGUAGE]}</Text>
-          </View>
-        )}
+        {currentWord?.explanation &&
+          type !== LearnQuizType.MATCHING &&
+          type !== LearnQuizType.SELECT_WORD_FROM_EXPLANATION && (
+            <View className="flex flex-col gap-2 px-4">
+              <Text>{currentWord.explanation[TARGET_LANGUAGE]}</Text>
+              <Text>{currentWord.explanation[UI_LANGUAGE]}</Text>
+            </View>
+          )}
 
         <View
           className={cn(
@@ -285,13 +284,17 @@ const LearnQuiz: FC<{
         >
           <View className="px-4 py-6 web:max-w-4xl web:mx-auto web:w-full flex flex-col md:flex-row md:justify-between md:items-center">
             {result === 'correct' ? (
-              <Text className="font-semibold text-2xl text-green-600">Tuyệt vời 🎉</Text>
+              <Text className="font-semibold text-2xl text-green-600">
+                {getRandomCorrectMessage()}
+              </Text>
             ) : (
               <View>
-                <Text className="font-semibold text-2xl text-red-600 pt-2 md:pt-0">
-                  Đáp án đúng:
+                <Text className="font-semibold text-lg text-red-500 pt-2 md:pt-0">
+                  {getRandomWrongMessage()}
                 </Text>
-                <Text className="text-red-500 text-lg mt-1">{correctAnswer}</Text>
+                <Text className="text-red-500 text-lg mt-1">
+                  Đáp án đúng: <Text className="text-red-500 font-bold">{correctAnswer}</Text>
+                </Text>
               </View>
             )}
 

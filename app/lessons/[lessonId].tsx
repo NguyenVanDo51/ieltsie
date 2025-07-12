@@ -7,6 +7,10 @@ import { IT_VOCAB_LESSONS } from '~/data/vocab'
 import { Completed } from '~/components/learn/Completed'
 import { DATA_ALL_LESSON } from '~/lib/section'
 import { useScores } from '~/store/useScore'
+import { View } from 'lucide-react-native'
+import { Text } from '~/components/ui/text'
+import { Button } from '~/components/ui/button'
+import ViewWithFixedButton from '~/components/views/ViewWithFixedButton'
 
 const LearnPage: FC = () => {
   const { lessonId, topicId, addition } = useLocalSearchParams()
@@ -28,14 +32,16 @@ const LearnPage: FC = () => {
   }, [topicId, lessonId, lessonIndex])
 
   const [currentWords, setCurrentWords] = useState<ILesson['words']>([])
-
-  const handleWrongWords = (wrongWOrds?: ILesson['words']) => {
-    if (wrongWOrds.length < 1) {
+  const [isShowWrongNotification, setIsShowWrongNotification] = useState(false)
+  console.log('isShowWrongNotification', isShowWrongNotification)
+  const handleWrongWords = (wrongWords?: ILesson['words']) => {
+    if (wrongWords.length < 1) {
       setIsCompleted(true)
       addCompletedLesson(lessonId as string)
       return
     }
-    setCurrentWords(wrongWOrds)
+    setIsShowWrongNotification(true)
+    setCurrentWords(wrongWords)
     setIsDoWrongWords(true)
   }
 
@@ -63,6 +69,16 @@ const LearnPage: FC = () => {
     }
   }, [])
 
+  if (isShowWrongNotification) {
+    return (
+      <ViewWithFixedButton className="items-center justify-center" onButtonPress={() => setIsShowWrongNotification(false)}>
+        <Text className="text-2xl font-semibold text-gray-800 mb-4">
+          Cùng làm lại những từ chưa đúng nhé!
+        </Text>
+      </ViewWithFixedButton>
+    )
+  }
+
   if (isCompleted) {
     return <Completed />
   }
@@ -71,7 +87,6 @@ const LearnPage: FC = () => {
     <LearnQuiz
       words={currentWords}
       topic={topic}
-      lesson={lesson}
       handleWrongWords={handleWrongWords}
       isDoWrongWords={isDoWrongWords}
     />

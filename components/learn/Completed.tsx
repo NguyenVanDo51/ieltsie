@@ -14,15 +14,17 @@ export const Completed = () => {
   return (
     <SafeAreaProvider>
       <View
-        className="flex-1 flex flex-col py-6 px-4 items-center justify-between"
+        className="flex-1 flex-col py-4 px-4 items-center justify-between"
         style={{ paddingBottom: insets.bottom }}
       >
         <View />
+        
         <View className="flex flex-col items-center justify-center gap-6">
           <Image source={SuccessImage} style={{ width: 256, height: 256 }} contentFit="cover" />
           {/* <Text className="text-2xl font-bold mb-4 text-primary">Lesson Completed!</Text> */}
         </View>
-        <Button onPress={() => router.back()} className="w-full">
+
+        <Button onPress={() => router.back()} className="w-full web:mb-4">
           <Text>Tiếp tục</Text>
         </Button>
       </View>
