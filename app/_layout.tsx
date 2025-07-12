@@ -14,7 +14,6 @@ import { configureReanimatedLogger, ReanimatedLogLevel } from 'react-native-rean
 import { PopoverProvider } from '~/components/ui/popover'
 import { useScores } from '~/store/useScore'
 import { useFrameworkReady } from '~/hooks/useFrameworkReady'
-import { useFrameworkReady } from '@/hooks/useFrameworkReady'
 
 configureReanimatedLogger({
   level: ReanimatedLogLevel.warn,
